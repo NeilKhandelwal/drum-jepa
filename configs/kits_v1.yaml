@@ -1,0 +1,14 @@
+# Kit split for drum-JEPA. Fill in after running scripts/list_kits.py.
+#
+# Rules:
+#   - train kits: 6, spread from acoustic to electronic (808/909-style)
+#   - heldout kits: 8, never seen in training; used for E3 held-out-kit probes
+#   - All unique sequences are used on every listed kit. Never split by
+#     (sequence, kit): the same performance exists on all 43 kits, so a split
+#     by pair leaks the action. Sequence-level train/val/test comes from the
+#     E-GMD `split` column and is applied on top of this kit split.
+#
+# Names must match `kit_name` in e-gmd-v1.0.0.csv exactly.
+split_version: v1
+train_kits: []      # 6 names
+heldout_kits: []    # 8 names

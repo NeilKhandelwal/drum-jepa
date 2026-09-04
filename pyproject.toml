@@ -1,0 +1,8 @@
+[project]
+name = "drumjepa"
+version = "0.0.1"
+description = "Action-conditioned JEPA world model of drum sound (E-GMD), Music-JEPA-style"
+requires-python = ">=3.10"
+
+[tool.setuptools]
+packages = ["drumjepa"]

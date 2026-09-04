@@ -1,0 +1,37 @@
+# data and artifacts (never commit)
+data/
+!data/.gitkeep
+third_party/
+checkpoints/
+*.wav
+*.zip
+*.tar.gz
+*.npy
+*.npz
+*.pt
+*.pth
+*.ckpt
+
+# generated inventory outputs are committed on purpose (docs/); raw JSON is not
+data/inventory.json
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# experiment tracking
+wandb/
+runs/
+lightning_logs/
+mlruns/
+
+# editors / os
+.DS_Store
+.idea/
+.vscode/
+*.swp
