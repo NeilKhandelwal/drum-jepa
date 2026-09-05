@@ -8,3 +8,5 @@ librosa>=0.10
 soundfile>=0.12
 tqdm>=4.66
 matplotlib>=3.8
+torchvision
+timm  # warm-up ViT backbone (warmup/lejepa_inet10.py)
