@@ -10,7 +10,10 @@ distinct on the kit (rimshot vs head, bell vs bow, crash 1 vs crash 2).
 Collapse them only when the sound is nearly the same (tom rim -> tom,
 hi-hat edge -> hi-hat).
 
-Pitch numbers follow the Groove MIDI Dataset mapping table. Verify them
+Pitch numbers follow the Groove MIDI Dataset mapping table and apply
+to the CANONICAL MIDI of a sequence (the file shipped for any of the 25
+non-remapping kits, e.g. "Acoustic Kit"). Per-kit MIDI files on the
+other 18 kits carry pad remaps (54/39/56); see docs/inventory.md. Verify them
 against scripts/inventory.py output before training; any pitch seen in
 the data but absent here is a bug.
 

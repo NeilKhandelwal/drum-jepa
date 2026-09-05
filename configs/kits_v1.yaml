@@ -1,4 +1,4 @@
-# Kit split for drum-JEPA. Fill in after running scripts/list_kits.py.
+# Kit split for drum-JEPA. Names match `kit_name` in e-gmd-v1.0.0.csv exactly.
 #
 # Rules:
 #   - train kits: 6, spread from acoustic to electronic (808/909-style)
@@ -8,7 +8,34 @@
 #     by pair leaks the action. Sequence-level train/val/test comes from the
 #     E-GMD `split` column and is applied on top of this kit split.
 #
-# Names must match `kit_name` in e-gmd-v1.0.0.csv exactly.
+# The action (drumroll + CC4) is built from the CANONICAL MIDI of each
+# sequence, not from the kit's own MIDI file: 18/43 kits remap pads in the
+# shipped MIDI (see docs/inventory.md, "Per-kit MIDI deviation"). Kits below
+# are annotated with their remap so the counterfactual analysis knows where
+# the kit's pad->sound map is degenerate.
 split_version: v1
-train_kits: []      # 6 names
-heldout_kits: []    # 8 names
+canonical_kit: Acoustic Kit   # any of the 25 canonical kits gives identical MIDI
+
+train_kits:                   # 6, acoustic -> electronic
+  - Jazz                      # canonical
+  - 60s Rock                  # canonical
+  - Studio (Live Room)        # canonical. CLAUDE.md said "Studio"; the other
+                              # candidate, "Pop-Rock (Studio)", is held out.
+  - Cassette (Lo-Fi Compress) # canonical
+  - Ele-Drum                  # remaps tom rims -> 39 (clap), x-stick -> 40 (rim)
+  - 808 Simple                # remaps x-stick -> 40 (rim)
+
+heldout_kits:                 # 8, acoustic -> electronic
+  - Acoustic Kit              # canonical; plain acoustic reference
+  - Unplugged                 # canonical; sparse acoustic
+  - Bigga Bop (Jazz)          # canonical; near-neighbor of train kit Jazz
+  - Heavy Metal               # canonical; far acoustic
+  - Pop-Rock (Studio)         # canonical; near-neighbor of Studio (Live Room)
+  - Raw Dnb (Layered Hybrid)  # canonical; hybrid
+  - 909 Simple                # near-neighbor of 808 Simple; same x-stick -> rim remap
+  - Deep Daft                 # electronic; open hat -> 54, tom-2 rim -> 39
+
+# Not extracted in v1. The two kits whose entire hi-hat (incl. pedal) collapses
+# to one sound (pitch 54): "Compact Lite (w/ Tambourine HH)", "Dark Hybrid".
+# Add one as a diagnostic held-out kit if Q1 needs a kit where the action
+# under-determines the audio by construction.
