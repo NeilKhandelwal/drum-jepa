@@ -49,3 +49,19 @@ Targets are teacher-encoder outputs after LayerNorm, stop-grad. EMA tau 0.95 per
 200 (loss_s 1.38 -> 0.026, loss_a 1.29 -> 0.011); s_tea_std stayed 0.59-0.78 and
 a_tea_std recovered from 0.05 to 0.45. Loss does not reach exactly 0 because the EMA
 teacher keeps moving and masks are resampled every step. Passed.
+
+## E2 action-only baseline (2026-09-05)
+Same architecture, data, masks and recipe as drumjepa_v1; the only change is that
+f receives no s_t tokens (`use_state: false`), so its input is the masked s_{t+1}
+half plus cross-attention to a_{t+1}. The visible 25% of s_{t+1} is kept on purpose:
+it is the same information the full model gets, so the comparison isolates s_t.
+
+Consequence: the action-only model is invariant to kit swap by construction, so
+its kit-swap win rate is 0.5 exactly. E2 therefore compares the two models' errors
+under shared masks per condition (clean held-out, kit-swapped s_t, post-ring-out
+windows where a_{t+1} has few or no onsets) and additionally under a full mask,
+where kit identity can only come from s_t. Q1 predicts: near tie on clean, full
+model wins on ring-out and under full mask.
+
+Watch for: at 75% mask the visible s_{t+1} tokens leak kit identity to both
+models, which can hide the value of s_t. The full-mask comparison is the control.
