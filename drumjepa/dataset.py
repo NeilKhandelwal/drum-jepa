@@ -28,9 +28,18 @@ def density_bin(n_onsets):
 
 
 class SegmentPairs(Dataset):
-    def __init__(self, cache_dir, split, seg_hop=SEG_FRAMES, mel_mean=0.0, mel_std=1.0):
+    def __init__(self, cache_dir, split, seg_hop=SEG_FRAMES, mel_mean=None, mel_std=None):
         d = os.path.join(cache_dir, split)
         self.meta = json.load(open(os.path.join(d, "meta.json")))
+        # Default normalization comes from <cache_dir>/stats.json (train-split mean/std
+        # written by build_cache.py). Pass mel_mean/mel_std explicitly to override.
+        # Caveat: the stats are tied to the cache build, not to the run; a rebuilt cache
+        # or a different train subset changes them silently. Runs must record the values
+        # they used (see notes/decisions.md).
+        if mel_mean is None or mel_std is None:
+            st = json.load(open(os.path.join(cache_dir, "stats.json")))
+            mel_mean = st["mel_mean"] if mel_mean is None else mel_mean
+            mel_std = st["mel_std"] if mel_std is None else mel_std
         self.mel_mean, self.mel_std = float(mel_mean), float(mel_std)
         # Memmaps are opened lazily per process (see _arr): a memmap pickles its full
         # contents, so building them here would copy every array into each DataLoader
@@ -87,7 +96,7 @@ class SegmentPairs(Dataset):
 
 def mel_stats(cache_dir, split="train", max_frames=2_000_000, seed=0):
     """Global log-mel mean/std from a random subset of frames (for normalization)."""
-    ds = SegmentPairs(cache_dir, split)
+    ds = SegmentPairs(cache_dir, split, mel_mean=0.0, mel_std=1.0)
     n = ds.meta["mel_frames"]
     idx = np.sort(np.random.default_rng(seed).choice(n, size=min(max_frames, n), replace=False))
     x = np.asarray(ds.mel[idx], np.float32)
