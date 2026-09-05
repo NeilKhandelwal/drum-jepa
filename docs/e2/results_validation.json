@@ -1,0 +1,220 @@
+{
+ "full": "runs/drumjepa_v1",
+ "action_only": "runs/drumjepa_v1_actiononly",
+ "split": "validation",
+ "epoch_full": 19,
+ "epoch_action_only": 19,
+ "step_full": 12400,
+ "step_action_only": 12400,
+ "n_transitions": 12204,
+ "K": 4,
+ "seed": 0,
+ "n_bootstrap": 1000,
+ "git_commit": "1314061e91d8b9a91b88a7fd59450efe5c0432e8",
+ "metrics": {
+  "clean": {
+   "all": {
+    "n": 12204,
+    "err_full": 0.09535981714725494,
+    "err_action_only": 0.1437644213438034,
+    "win_rate": 0.7795804654211734,
+    "win_ci": [
+     0.7561589659027599,
+     0.8023476057089503
+    ],
+    "log_ratio": 0.3196171224117279,
+    "log_ratio_ci": [
+     0.29038310050964355,
+     0.35232409834861755
+    ]
+   },
+   "ring_out": {
+    "n": 42,
+    "err_full": 0.09693119674921036,
+    "err_action_only": 0.15096382796764374,
+    "win_rate": 0.5952380952380952,
+    "win_ci": [
+     0.4666666666666667,
+     0.6904761904761905
+    ],
+    "log_ratio": 0.20880235731601715,
+    "log_ratio_ci": [
+     -0.02605697326362133,
+     0.3527156114578247
+    ]
+   },
+   "dense": {
+    "n": 4110,
+    "err_full": 0.09423379600048065,
+    "err_action_only": 0.14488492906093597,
+    "win_rate": 0.8199513381995134,
+    "win_ci": [
+     0.7863053784900116,
+     0.8480129069976615
+    ],
+    "log_ratio": 0.35737144947052,
+    "log_ratio_ci": [
+     0.3175516426563263,
+     0.4016791880130768
+    ]
+   },
+   "ring_out_le5": {
+    "n": 120,
+    "err_full": 0.09250331670045853,
+    "err_action_only": 0.13002684712409973,
+    "win_rate": 0.65,
+    "win_ci": [
+     0.5236772486772487,
+     0.7179687499999999
+    ],
+    "log_ratio": 0.2100919783115387,
+    "log_ratio_ci": [
+     0.0649462416768074,
+     0.2791825830936432
+    ]
+   }
+  },
+  "kit_swap": {
+   "all": {
+    "n": 12204,
+    "err_full": 0.11547408252954483,
+    "err_action_only": 0.1437644213438034,
+    "win_rate": 0.6147164863979023,
+    "win_ci": [
+     0.583379202049855,
+     0.6430000765323821
+    ],
+    "log_ratio": 0.12882530689239502,
+    "log_ratio_ci": [
+     0.0954400971531868,
+     0.1622297763824463
+    ]
+   },
+   "ring_out": {
+    "n": 42,
+    "err_full": 0.13192075490951538,
+    "err_action_only": 0.15096382796764374,
+    "win_rate": 0.4523809523809524,
+    "win_ci": [
+     0.3333333333333333,
+     0.5555555555555556
+    ],
+    "log_ratio": -0.12249691039323807,
+    "log_ratio_ci": [
+     -0.266933411359787,
+     -0.04225442558526993
+    ]
+   },
+   "dense": {
+    "n": 4110,
+    "err_full": 0.11579588055610657,
+    "err_action_only": 0.14488492906093597,
+    "win_rate": 0.6399026763990268,
+    "win_ci": [
+     0.5900574304510349,
+     0.6897185510542897
+    ],
+    "log_ratio": 0.15228354930877686,
+    "log_ratio_ci": [
+     0.10082301497459412,
+     0.2063159942626953
+    ]
+   },
+   "ring_out_le5": {
+    "n": 120,
+    "err_full": 0.12048175930976868,
+    "err_action_only": 0.13002684712409973,
+    "win_rate": 0.475,
+    "win_ci": [
+     0.34996212121212117,
+     0.5238095238095238
+    ],
+    "log_ratio": -0.04902911186218262,
+    "log_ratio_ci": [
+     -0.19390879571437836,
+     0.00943684484809637
+    ]
+   }
+  },
+  "full_mask": {
+   "all": {
+    "n": 12204,
+    "err_full": 0.6239550709724426,
+    "err_action_only": 1.3997822999954224,
+    "win_rate": 1.0,
+    "win_ci": [
+     1.0,
+     1.0
+    ],
+    "log_ratio": 0.8401925563812256,
+    "log_ratio_ci": [
+     0.7771890759468079,
+     0.9119025468826294
+    ]
+   },
+   "ring_out": {
+    "n": 42,
+    "err_full": 0.441933810710907,
+    "err_action_only": 1.421767234802246,
+    "win_rate": 1.0,
+    "win_ci": [
+     1.0,
+     1.0
+    ],
+    "log_ratio": 1.2321336269378662,
+    "log_ratio_ci": [
+     1.0569713115692139,
+     1.451796531677246
+    ]
+   },
+   "dense": {
+    "n": 4110,
+    "err_full": 0.5949157476425171,
+    "err_action_only": 1.382364273071289,
+    "win_rate": 1.0,
+    "win_ci": [
+     1.0,
+     1.0
+    ],
+    "log_ratio": 0.8789747953414917,
+    "log_ratio_ci": [
+     0.7649359107017517,
+     1.0049545764923096
+    ]
+   },
+   "ring_out_le5": {
+    "n": 120,
+    "err_full": 0.5636941194534302,
+    "err_action_only": 1.4537073373794556,
+    "win_rate": 1.0,
+    "win_ci": [
+     1.0,
+     1.0
+    ],
+    "log_ratio": 1.0000596046447754,
+    "log_ratio_ci": [
+     0.8955299258232117,
+     1.1596354246139526
+    ]
+   }
+  }
+ },
+ "subset_n": {
+  "all": 12204,
+  "ring_out": 42,
+  "dense": 4110,
+  "ring_out_le5": 120
+ },
+ "ring_out_note": "ring_out (<= 2 onsets in the t+1 window) has only 42 transitions, so the <= 5 onset subset `ring_out_le5` (120) is reported as well.",
+ "kit_swap_self": {
+  "n": 12204,
+  "action_only_max_abs_diff": 0.0,
+  "full": 0.993813503769256,
+  "action_only": 0.5
+ },
+ "verdict": [
+  "1. Clean, all: n=12204, win 0.780, log-ratio +0.3196 [+0.2904, +0.3523] -> full better. Q1 predicts a near tie.",
+  "2. Clean, ring_out: n=42, win 0.595, log-ratio +0.2088 [-0.0261, +0.3527] -> tie (CI spans 0). Q1 predicts the full model wins.",
+  "3. Full mask, all: n=12204, win 1.000, log-ratio +0.8402 [+0.7772, +0.9119] -> full better; kit-swapped s_t, all: n=12204, win 0.615, log-ratio +0.1288 [+0.0954, +0.1622] -> full better. Q1 predicts the full model wins under a full mask."
+ ]
+}

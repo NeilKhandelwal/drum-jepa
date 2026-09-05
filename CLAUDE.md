@@ -130,6 +130,12 @@ scripts/train.py (--overfit, --resume), tests/ (15 pass). Overfit-32 passed. Fir
 run drumjepa_v1: 20 epochs on 6 kits, no collapse. E1 PASSED (docs/experiments.md,
 docs/e1/): kit swap 0.993, random action 0.993, action shift 0.979, random state
 0.973, state shift 0.594. Design decisions and caveats: notes/decisions.md.
+E2 done 2026-09-05 (docs/experiments.md, docs/e2/): action-only baseline
+(drumjepa_v1_actiononly, use_state false) loses to the full model on CLEAN held-out
+inputs (err 0.144 vs 0.095, win 0.78, both splits), not only on kit swap. Q1's
+"near tie" prediction is refuted: s_t carries information beyond kit identity
+(kit swap costs the full model 0.02; the rest of the 0.05 gap survives it). Ring-out
+subsets too small (42/36) to conclude. Next: E3 kit-latent probes.
 Next:
 1. (done) Fill configs/kits_v1.yaml, commit, push.
 2. Warm-up: warmup/lejepa_inet10.py (LeJEPA minimal, ViT-S/8, Imagenette,
