@@ -18,7 +18,7 @@ import csv
 import json
 import os
 import sys
-from multiprocessing import Pool
+from concurrent.futures import ProcessPoolExecutor
 
 import numpy as np
 import pandas as pd
@@ -33,12 +33,19 @@ from drumjepa.drum_map import CLASSES_V1, MAP_VERSION  # noqa: E402
 CACHE_VERSION = "v1"
 
 
+def _init_worker():
+    os.environ["OMP_NUM_THREADS"] = "1"  # one BLAS thread per worker
+
+
 def mel_job(path):
     y, sr = sf.read(path, dtype="float32", always_2d=True)
     return F.log_mel(y.mean(1), sr).astype(np.float16)
 
 
 def build_split(df, split, cfg, out, workers, midi_dir, audio_dir):
+    if os.path.exists(os.path.join(out, "meta.json")):
+        print(f"[{split}] already built, skipping")
+        return
     os.makedirs(out, exist_ok=True)
     kits = cfg["train_kits"] + cfg["heldout_kits"]
     kit_id = {k: i for i, k in enumerate(kits)}
@@ -49,22 +56,44 @@ def build_split(df, split, cfg, out, workers, midi_dir, audio_dir):
     print(f"[{split}] {len(d)} files, {d.id.nunique()} sequences, {len(kits)} kits")
 
     # --- mel per (sequence, kit) ---
+    # Kit recordings of one performance differ in length by a few frames (tails), so
+    # every kit's mel is truncated to the shortest across kits; that shared length is
+    # the sequence's n_frames for the action arrays too.
     paths = [os.path.join(audio_dir, f) for f in d.audio_filename]
     n_frames_by_seq = {}
+    max_trim = 0
     start = 0
-    with Pool(workers) as pool, open(os.path.join(out, "mel.f16"), "wb") as fmel, \
+    # ProcessPoolExecutor raises BrokenProcessPool if a worker dies; multiprocessing.Pool
+    # deadlocked on teardown after a main-loop exception (observed 2026-09-04). Do not add
+    # max_tasks_per_child: worker recycling hung the train build on Python 3.13 / spawn.
+    with ProcessPoolExecutor(workers, initializer=_init_worker) as pool, \
+            open(os.path.join(out, "mel.f16"), "wb") as fmel, \
             open(os.path.join(out, "mel_index.csv"), "w", newline="") as fidx:
         w = csv.writer(fidx)
         w.writerow(["file_idx", "seq_id", "kit_name", "kit_id", "start", "n_frames", "audio_filename"])
-        for i, (mel, row) in enumerate(zip(tqdm(pool.imap(mel_job, paths, chunksize=4),
-                                                 total=len(paths), desc=f"mel/{split}"),
-                                            d.itertuples())):
-            n = mel.shape[0]
-            prev = n_frames_by_seq.setdefault(row.id, n)
-            assert prev == n, f"frame count differs across kits for {row.id}: {prev} vs {n}"
-            fmel.write(mel.tobytes())
-            w.writerow([i, row.id, row.kit_name, kit_id[row.kit_name], start, n, row.audio_filename])
-            start += n
+        results = zip(tqdm(pool.map(mel_job, paths, chunksize=4), total=len(paths),
+                           desc=f"mel/{split}", mininterval=5), d.itertuples())
+        buf, buf_id, file_idx = [], None, 0
+
+        def flush():
+            nonlocal start, file_idx, max_trim
+            n = min(m.shape[0] for m, _ in buf)
+            max_trim = max(max_trim, max(m.shape[0] for m, _ in buf) - n)
+            n_frames_by_seq[buf_id] = n
+            for m, row in buf:
+                fmel.write(np.ascontiguousarray(m[:n]).tobytes())
+                w.writerow([file_idx, row.id, row.kit_name, kit_id[row.kit_name], start, n, row.audio_filename])
+                start += n
+                file_idx += 1
+
+        for mel, row in results:
+            if buf and row.id != buf_id:
+                flush(); buf = []
+            buf_id = row.id
+            buf.append((mel, row))
+        if buf:
+            flush()
+    print(f"[{split}] max frames trimmed from a kit recording: {max_trim}")
     total_mel_frames = start
 
     # --- action per sequence (canonical MIDI) ---
@@ -86,6 +115,7 @@ def build_split(df, split, cfg, out, workers, midi_dir, audio_dir):
                 mel=F.MEL_PARAMS, seg_frames=F.SEG_FRAMES, velocity_scaling="velocity/127",
                 cc4_scaling="value/127, forward-filled per frame, back-filled before first message",
                 n_files=len(d), n_sequences=len(n_frames_by_seq), mel_frames=total_mel_frames,
+                max_frames_trimmed_across_kits=max_trim,
                 seq_frames=start, dtype="float16")
     json.dump(meta, open(os.path.join(out, "meta.json"), "w"), indent=1)
     print(f"[{split}] done: {total_mel_frames:,} mel frames, {start:,} action frames")
