@@ -123,7 +123,13 @@ Done 2026-09-04 (evening): audio zip downloaded and sha-verified; 14 kits extrac
 to data/audio (14,826 wav, 43 GB, 44.1 kHz mono). Zip kept in data/ (1.3 TB free).
 drumjepa/features.py + scripts/build_cache.py + drumjepa/dataset.py +
 scripts/bench_loader.py written; full cache build launched (data/build_cache.log).
-Warm-up 100-epoch LeJEPA run in progress (runs/lejepa_inet10_e100/metrics.csv).
+Warm-up LeJEPA run stopped at epoch 60/100 by a kernel panic; goal (clean curve,
+MPS experience) met, not resumed.
+Done 2026-09-05: cache v1 built (22 GB). drumjepa/model.py (18.8M student params),
+scripts/train.py (--overfit, --resume), tests/ (15 pass). Overfit-32 passed. First
+run drumjepa_v1: 20 epochs on 6 kits, no collapse. E1 PASSED (docs/experiments.md,
+docs/e1/): kit swap 0.993, random action 0.993, action shift 0.979, random state
+0.973, state shift 0.594. Design decisions and caveats: notes/decisions.md.
 Next:
 1. (done) Fill configs/kits_v1.yaml, commit, push.
 2. Warm-up: warmup/lejepa_inet10.py (LeJEPA minimal, ViT-S/8, Imagenette,

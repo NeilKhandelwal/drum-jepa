@@ -267,6 +267,38 @@ class DrumJEPA(nn.Module):
         """Mean over dims of the per-dim std across all tokens in the batch."""
         return z.detach().float().flatten(0, 1).std(dim=0).mean()
 
+    def _state_branch(self, x_t, a_t1, cc_t1, x_t1, mask_s):
+        """The s-branch of one forward: (pred, s_tgt, s_t), each (B, n_s, d).
+
+        Context encodings of t+1 see the visible tokens only; the t side and the
+        action given to f as K/V are full (the action is given, not predicted).
+        """
+        vis_s = self._visible_idx(mask_s)
+        s_t = self.encode_state(x_t)
+        # A fully masked mask_s leaves no visible tokens: skip the encode (the blocks
+        # cannot attend over zero tokens) and let f use mask tokens everywhere.
+        s_t1_vis = (self.encode_state(x_t1, keep=vis_s) if vis_s.size(1)
+                    else s_t.new_zeros(s_t.size(0), 0, s_t.size(-1)))
+        pred = self.f(s_t, s_t1_vis, vis_s, ctx=self.encode_action(a_t1, cc_t1))
+        with torch.no_grad():
+            s_tgt = self.encode_state(x_t1, teacher=True)
+        return pred, s_tgt, s_t
+
+    @torch.no_grad()
+    def state_prediction_error(self, x_t, a_t1, cc_t1, x_t1, mask_s) -> torch.Tensor:
+        """Per-sample masked MSE of f(s_t, a_{t+1}) against Es_tea(x_{t+1}), (B,).
+
+        Same computation as `loss_s` in forward() but one value per sample and with
+        a caller-supplied mask (E1 reuses one mask across perturbed conditions).
+
+        Args:
+          mask_s: (B, n_s) bool, True where the token is masked and predicted.
+        """
+        pred, s_tgt, _ = self._state_branch(x_t, a_t1, cc_t1, x_t1, mask_s)
+        se = (pred.float() - s_tgt.float()).pow(2).mean(-1)  # (B, n_s)
+        m = mask_s.float()
+        return (se * m).sum(1) / m.sum(1).clamp(min=1)
+
     def forward(self, batch: dict) -> dict:
         """One training step's losses and collapse monitors (0-d tensors)."""
         x_t, x_t1 = batch["x_t"], batch["x_t1"]
@@ -274,20 +306,16 @@ class DrumJEPA(nn.Module):
         mask_s = self._state_mask(B, device)
         mask_a = self._action_mask(B, device)
         self._last_masks = {"state": mask_s, "action": mask_a}
-        vis_s, vis_a = self._visible_idx(mask_s), self._visible_idx(mask_a)
+        vis_a = self._visible_idx(mask_a)
 
-        # Context encodings of t+1 see the visible tokens only; the t side and the
-        # action given to f as K/V are full (the action is given, not predicted).
-        s_t = self.encode_state(x_t)
-        s_t1_vis = self.encode_state(x_t1, keep=vis_s)
+        pred_s, s_tgt, s_t = self._state_branch(
+            x_t, batch["a_t1"], batch["cc_t1"], x_t1, mask_s)
         a_t = self.encode_action(batch["a_t"], batch["cc_t"])
-        a_t1 = self.encode_action(batch["a_t1"], batch["cc_t1"])
         a_t1_vis = self.encode_action(batch["a_t1"], batch["cc_t1"], keep=vis_a)
         with torch.no_grad():
-            s_tgt = self.encode_state(x_t1, teacher=True)
             a_tgt = self.encode_action(batch["a_t1"], batch["cc_t1"], teacher=True)
 
-        loss_s = self._masked_mse(self.f(s_t, s_t1_vis, vis_s, ctx=a_t1), s_tgt, mask_s)
+        loss_s = self._masked_mse(pred_s, s_tgt, mask_s)
         loss_a = self._masked_mse(self.g(a_t, a_t1_vis, vis_a), a_tgt, mask_a)
         return {
             "loss": loss_s + self.lambda_a * loss_a,
