@@ -28,7 +28,7 @@ def density_bin(n_onsets):
 
 
 class SegmentPairs(Dataset):
-    def __init__(self, cache_dir, split, seg_hop=SEG_FRAMES, mel_mean=None, mel_std=None):
+    def __init__(self, cache_dir, split, seg_hop=SEG_FRAMES, mel_mean=None, mel_std=None, kits=None):
         d = os.path.join(cache_dir, split)
         self.meta = json.load(open(os.path.join(d, "meta.json")))
         # Default normalization comes from <cache_dir>/stats.json (train-split mean/std
@@ -61,6 +61,13 @@ class SegmentPairs(Dataset):
                 kit.append(r.kit_id); seq_idx.append(r.seq_idx)
         self.mel_start, self.seq_start = np.array(mel_start), np.array(seq_start)
         self.offset, self.kit_id, self.seq_idx = np.array(offset), np.array(kit), np.array(seq_idx)
+        # Optional kit subset: the cache holds all 14 kits, a run trains on 6 (configs/kits_v1.yaml).
+        self.kit_names_used = list(self.meta["kits"]) if kits is None else list(kits)
+        if kits is not None:
+            ids = [self.meta["kits"].index(k) for k in kits]  # KeyError-equivalent: ValueError on typos
+            keep = np.isin(self.kit_id, ids)
+            self.mel_start, self.seq_start = self.mel_start[keep], self.seq_start[keep]
+            self.offset, self.kit_id, self.seq_idx = self.offset[keep], self.kit_id[keep], self.seq_idx[keep]
         a = self.seq_start + self.offset
         self.density = np.array([density_bin((self.roll[s:s + SEG_FRAMES] > 0).sum()) for s in a])
         self.seq_ids = seqs.seq_id.tolist()

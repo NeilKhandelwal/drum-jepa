@@ -43,3 +43,9 @@ f sees all s_t tokens (student), the visible s_{t+1} tokens (student), and learn
 mask tokens with positional embedding at masked positions. a_{t+1} for cross-attention
 comes from the student action encoder with gradient; action tokens are K/V only.
 Targets are teacher-encoder outputs after LayerNorm, stop-grad. EMA tau 0.95 per step.
+
+## Overfit wiring test (2026-09-05)
+32 fixed pairs, lr 6e-4 after a 20-step warmup, MPS bf16: loss 2.03 -> 0.03 by step
+200 (loss_s 1.38 -> 0.026, loss_a 1.29 -> 0.011); s_tea_std stayed 0.59-0.78 and
+a_tea_std recovered from 0.05 to 0.45. Loss does not reach exactly 0 because the EMA
+teacher keeps moving and masks are resampled every step. Passed.
