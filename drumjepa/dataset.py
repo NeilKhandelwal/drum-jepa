@@ -32,11 +32,14 @@ class SegmentPairs(Dataset):
         d = os.path.join(cache_dir, split)
         self.meta = json.load(open(os.path.join(d, "meta.json")))
         self.mel_mean, self.mel_std = float(mel_mean), float(mel_std)
-        self.mel = np.memmap(os.path.join(d, "mel.f16"), np.float16, "r",
-                             shape=(self.meta["mel_frames"], N_MELS))
-        self.roll = np.memmap(os.path.join(d, "roll.f16"), np.float16, "r",
-                              shape=(self.meta["seq_frames"], K_V1))
-        self.cc4 = np.memmap(os.path.join(d, "cc4.f16"), np.float16, "r", shape=(self.meta["seq_frames"],))
+        # Memmaps are opened lazily per process (see _arr): a memmap pickles its full
+        # contents, so building them here would copy every array into each DataLoader
+        # worker under the spawn start method (observed 2026-09-05: 4 workers x 2.6 GB).
+        self._shapes = {"mel": (self.meta["mel_frames"], N_MELS),
+                        "roll": (self.meta["seq_frames"], K_V1),
+                        "cc4": (self.meta["seq_frames"],)}
+        self._paths = {k: os.path.join(d, f"{k}.f16") for k in self._shapes}
+        self._arrs = {}
         files = pd.read_csv(os.path.join(d, "mel_index.csv"))
         seqs = pd.read_csv(os.path.join(d, "seq_index.csv")).reset_index().rename(columns={"index": "seq_idx"})
         files = files.merge(seqs[["seq_id", "seq_idx", "start"]].rename(columns={"start": "seq_start"}), on="seq_id")
@@ -53,6 +56,18 @@ class SegmentPairs(Dataset):
         self.density = np.array([density_bin((self.roll[s:s + SEG_FRAMES] > 0).sum()) for s in a])
         self.seq_ids = seqs.seq_id.tolist()
         self.kits = self.meta["kits"]
+
+    def _arr(self, name):
+        if name not in self._arrs:
+            self._arrs[name] = np.memmap(self._paths[name], np.float16, "r", shape=self._shapes[name])
+        return self._arrs[name]
+
+    mel = property(lambda self: self._arr("mel"))
+    roll = property(lambda self: self._arr("roll"))
+    cc4 = property(lambda self: self._arr("cc4"))
+
+    def __getstate__(self):
+        return {**self.__dict__, "_arrs": {}}
 
     def __len__(self):
         return len(self.offset)
