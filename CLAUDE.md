@@ -119,17 +119,19 @@ READ IT: check for UNMAPPED pitches, aftertouch presence, CC4 verdict, density).
 Done 2026-09-04: inventory verdicts read (no aftertouch -> choke eval is off;
 CC4 has 85% mid-range mass; 3 unmapped pitches explained as per-kit remaps,
 map stays v1); configs/kits_v1.yaml filled; scripts/kit_midi_diff.py added.
-In progress: 90 GB audio zip downloading to data/ under caffeinate (stalled at
-417 MB on 09-04, restarted; log in data/download.log).
+Done 2026-09-04 (evening): audio zip downloaded and sha-verified; 14 kits extracted
+to data/audio (14,826 wav, 43 GB, 44.1 kHz mono). Zip kept in data/ (1.3 TB free).
+drumjepa/features.py + scripts/build_cache.py + drumjepa/dataset.py +
+scripts/bench_loader.py written; full cache build launched (data/build_cache.log).
+Warm-up 100-epoch LeJEPA run in progress (runs/lejepa_inet10_e100/metrics.csv).
 Next:
 1. (done) Fill configs/kits_v1.yaml, commit, push.
 2. Warm-up: warmup/lejepa_inet10.py (LeJEPA minimal, ViT-S/8, Imagenette,
    device-agnostic). Smoke test with --epochs 1 --max-steps 20, then 100 epochs,
    then 800 overnight if it fits. Reference: 90.7% at 800 epochs on one GPU.
    Goal is a clean monotone curve and MPS experience, not the number.
-3. When audio finishes: python scripts/extract_kits.py, then delete the zip if
-   space is tight.
-4. Preprocessing: cache log-mel (200x229), drumroll (200x14), CC4 track (200,),
+3. (done) Audio extracted. Delete data/e-gmd-v1.0.0.zip if space is tight.
+4. (code done, build running) Preprocessing: cache log-mel (200x229), drumroll (200x14), CC4 track (200,),
    with sequence_id, kit_id, onset-density bin, MAP_VERSION, as memory-mapped
    arrays per split. Benchmark the dataloader before writing the model.
 5. Port the model in this order, each tested on a synthetic batch:
