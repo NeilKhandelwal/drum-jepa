@@ -22,6 +22,7 @@ DEFAULTS = dict(
     d_model=256, d_ff=512, n_heads=4,
     enc_s_layers=12, enc_a_layers=8, pred_layers=6,
     state_patch=(25, 15), n_mels_pad=240, action_patch_frames=25,
+    use_state=True,  # False = E2 action-only baseline: f gets no s_t tokens
     mask_ratio=0.75, mask_blocks=4, mask_aspect=(0.75, 1.5), mask_scale=(0.15, 0.2),
     tau=0.95, lambda_a=0.5, dropout=0.0,
 )
@@ -149,7 +150,7 @@ class ActionEncoder(nn.Module):
 class Predictor(nn.Module):
     """Predicts masked t+1 tokens from [t tokens ; visible t+1 tokens + mask tokens]."""
 
-    def __init__(self, cfg, n_tok, pos, cross):
+    def __init__(self, cfg, n_tok, pos, cross, use_state=True):
         super().__init__()
         d = cfg["d_model"]
         self.n_tok = n_tok
@@ -163,6 +164,7 @@ class Predictor(nn.Module):
             for _ in range(cfg["pred_layers"]))
         self.norm = nn.LayerNorm(d)
         self.head = nn.Linear(d, d)
+        self.use_state = use_state
 
     def forward(self, z_t, z_t1_vis, vis_idx, ctx=None):
         """z_t: (B, N, d) student t tokens; z_t1_vis: (B, n_vis, d) at `vis_idx`.
@@ -172,10 +174,12 @@ class Predictor(nn.Module):
         pos, seg = self.pos.to(z_t.dtype), self.seg.to(z_t.dtype)
         cur = self.mask_token.to(z_t.dtype).expand(z_t.size(0), self.n_tok, -1).clone()
         cur = cur.scatter(1, vis_idx[..., None].expand(-1, -1, cur.size(-1)), z_t1_vis)
-        x = torch.cat([z_t + pos + seg[0], cur + pos + seg[1]], dim=1)
+        cur = cur + pos + seg[1]
+        # use_state=False is the E2 action-only baseline: f sees no s_t tokens.
+        x = torch.cat([z_t + pos + seg[0], cur], dim=1) if self.use_state else cur
         for blk in self.blocks:
             x = blk(x, ctx)
-        return self.head(self.norm(x[:, self.n_tok:]))
+        return self.head(self.norm(x[:, -self.n_tok:]))
 
 
 class DrumJEPA(nn.Module):
@@ -205,7 +209,8 @@ class DrumJEPA(nn.Module):
         self.Ea_tea = copy.deepcopy(self.Ea_stu).requires_grad_(False)
 
         d = cfg["d_model"]
-        self.f = Predictor(cfg, self.n_s, sincos_2d(d, *self.grid), cross=True)
+        self.f = Predictor(cfg, self.n_s, sincos_2d(d, *self.grid), cross=True,
+                           use_state=cfg["use_state"])
         self.g = Predictor(cfg, self.n_a, sincos_1d(d, torch.arange(self.n_a)), cross=False)
         self._last_masks = None
 

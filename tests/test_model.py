@@ -130,3 +130,18 @@ def test_mps_bf16_autocast():
     for k in KEYS:
         assert torch.isfinite(out[k]), k
     assert torch.isfinite(model.Es_stu.patch.weight.grad).all()
+
+
+def test_action_only_predictor_ignores_state():
+    """use_state=False (E2 baseline): f's output must not depend on x_t."""
+    m, b = make(cfg={"use_state": False})
+    m.eval()
+    mask = torch.zeros(4, m.n_s, dtype=torch.bool); mask[:, :96] = True
+    e1 = m.state_prediction_error(b["x_t"], b["a_t1"], b["cc_t1"], b["x_t1"], mask)
+    e2 = m.state_prediction_error(torch.randn_like(b["x_t"]), b["a_t1"], b["cc_t1"], b["x_t1"], mask)
+    assert torch.allclose(e1, e2)
+    full, _ = make()
+    full.eval()
+    f1 = full.state_prediction_error(b["x_t"], b["a_t1"], b["cc_t1"], b["x_t1"], mask)
+    f2 = full.state_prediction_error(torch.randn_like(b["x_t"]), b["a_t1"], b["cc_t1"], b["x_t1"], mask)
+    assert not torch.allclose(f1, f2)
