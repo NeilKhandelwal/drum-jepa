@@ -73,3 +73,16 @@ and scored on validation and test. Two baselines bound the probe numbers: mean
 log-mel of the clip (kit identity may be trivially linear in the raw spectrogram)
 and a random-init encoder with the same architecture (what the architecture gives
 for free). A probe result only counts if the trained encoder beats both.
+
+## E5 AO-JEPA baseline (2026-09-06)
+`use_action: false`: same state encoder, same masks and recipe, predictor f sees s_t
+and the masked s_{t+1} but has no cross-attention (no action encoder, no g loss).
+This is an I-JEPA-style audio JEPA with one step of temporal context, and it isolates
+action conditioning exactly. Student params 9.7M vs 18.8M (f loses its cross-attn
+blocks: 3.2M vs 4.8M; Ea and g are absent).
+
+Watch for: fewer parameters and a single loss term make this an easier optimization
+problem, not a harder one. If AO-JEPA's state loss ends lower than drum-JEPA's that
+is expected (it predicts without a conditioning signal it has to learn to use), and
+says nothing about representation quality. Only the probes and the E3 geometry
+decide E5.

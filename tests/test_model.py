@@ -145,3 +145,16 @@ def test_action_only_predictor_ignores_state():
     f1 = full.state_prediction_error(b["x_t"], b["a_t1"], b["cc_t1"], b["x_t1"], mask)
     f2 = full.state_prediction_error(torch.randn_like(b["x_t"]), b["a_t1"], b["cc_t1"], b["x_t1"], mask)
     assert not torch.allclose(f1, f2)
+
+
+def test_audio_only_ignores_actions():
+    """use_action=False (E5 AO-JEPA baseline): loss must not depend on the action."""
+    m, b = make(cfg={"use_action": False})
+    m.eval()
+    mask = torch.zeros(4, m.n_s, dtype=torch.bool); mask[:, :96] = True
+    e1 = m.state_prediction_error(b["x_t"], b["a_t1"], b["cc_t1"], b["x_t1"], mask)
+    e2 = m.state_prediction_error(b["x_t"], torch.rand_like(b["a_t1"]), b["cc_t1"], b["x_t1"], mask)
+    assert torch.allclose(e1, e2)
+    out = m(b)
+    assert out["loss_a"].item() == 0.0 and torch.isfinite(out["loss"])
+    assert "Ea" not in m.n_params() and m.n_params()["total_student"] > 0

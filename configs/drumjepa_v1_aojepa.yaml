@@ -1,0 +1,56 @@
+# drum-JEPA v1 training config (scripts/train.py).
+#
+# Hyperparameters follow the Music-JEPA paper (CLAUDE.md, "Training"): Adam
+# lr 6e-4, wd 1e-4, batch 128, 15-25 epochs, lambda 0.5, tau 0.95. Details the
+# paper leaves open are in notes/decisions.md; the model reads them from the
+# `model` section, which is empty here so drumjepa.model.DrumJEPA defaults win.
+run:
+  name: drumjepa_v1_aojepa
+  seed: 0
+
+data:
+  cache_dir: data/cache/v1
+  split_version: v1
+  MAP_VERSION: v1
+  train_kits:                   # configs/kits_v1.yaml train_kits, verbatim
+    - Jazz
+    - 60s Rock
+    - Studio (Live Room)
+    - Cassette (Lo-Fi Compress)
+    - Ele-Drum
+    - 808 Simple
+  seg_hop: 200                  # frames between segment starts; 200 = no overlap
+  workers: 4
+  val_pairs: 2048               # fixed random subset of validation (same kits)
+
+model: {use_action: false}   # E5 AO-JEPA baseline: audio-only masked JEPA, no actions
+  # Defaults live in drumjepa/model.py; uncomment to override. See notes/decisions.md.
+  # d_model: 256
+  # d_ff: 512
+  # n_heads: 4
+  # enc_s_layers: 12            # E_s
+  # enc_a_layers: 8             # E_a
+  # pred_layers: 6              # f and g
+  # state_patch: [25, 15]       # frames x mel bins on the 200x240 padded mel -> 8x16 tokens
+  # action_patch_frames: 25     # one action token per 250 ms -> 8 tokens
+  # mask_ratio: 0.75            # I-JEPA multi-block on s_{t+1}; random on a_{t+1}
+  # lambda_a: 0.5               # loss = loss_s + lambda_a * loss_a
+  # tau: 0.95                   # teacher EMA, one update per optimizer step
+  # mask_blocks: 4              # mask_scale: [0.15, 0.2], mask_aspect: [0.75, 1.5]
+
+optim:
+  optimizer: adamw
+  lr: 6.0e-4
+  weight_decay: 1.0e-4
+  betas: [0.9, 0.95]
+  batch_size: 128
+  epochs: 20
+  warmup_steps: 500             # linear warmup, then cosine
+  min_lr_factor: 0.1            # cosine floor = min_lr_factor * lr
+  grad_clip: 1.0
+
+# bf16 autocast on MPS/CUDA (ignored on CPU). The whole forward and loss stay
+# inside the autocast block: a bf16 activation reaching an fp32 Linear outside it
+# aborts the MPS process with no Python exception (notes/mps_fixes.md, 2026-09-04).
+# The EMA update runs in fp32 on the raw parameters, outside autocast.
+amp: true

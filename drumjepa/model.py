@@ -23,6 +23,7 @@ DEFAULTS = dict(
     enc_s_layers=12, enc_a_layers=8, pred_layers=6,
     state_patch=(25, 15), n_mels_pad=240, action_patch_frames=25,
     use_state=True,  # False = E2 action-only baseline: f gets no s_t tokens
+    use_action=True,  # False = E5 AO-JEPA baseline: no action encoder, no cross-attn, no g loss
     mask_ratio=0.75, mask_blocks=4, mask_aspect=(0.75, 1.5), mask_scale=(0.15, 0.2),
     tau=0.95, lambda_a=0.5, dropout=0.0,
 )
@@ -209,7 +210,8 @@ class DrumJEPA(nn.Module):
         self.Ea_tea = copy.deepcopy(self.Ea_stu).requires_grad_(False)
 
         d = cfg["d_model"]
-        self.f = Predictor(cfg, self.n_s, sincos_2d(d, *self.grid), cross=True,
+        self.use_action = cfg["use_action"]
+        self.f = Predictor(cfg, self.n_s, sincos_2d(d, *self.grid), cross=self.use_action,
                            use_state=cfg["use_state"])
         self.g = Predictor(cfg, self.n_a, sincos_1d(d, torch.arange(self.n_a)), cross=False)
         self._last_masks = None
@@ -284,7 +286,8 @@ class DrumJEPA(nn.Module):
         # cannot attend over zero tokens) and let f use mask tokens everywhere.
         s_t1_vis = (self.encode_state(x_t1, keep=vis_s) if vis_s.size(1)
                     else s_t.new_zeros(s_t.size(0), 0, s_t.size(-1)))
-        pred = self.f(s_t, s_t1_vis, vis_s, ctx=self.encode_action(a_t1, cc_t1))
+        ctx = self.encode_action(a_t1, cc_t1) if self.use_action else None
+        pred = self.f(s_t, s_t1_vis, vis_s, ctx=ctx)
         with torch.no_grad():
             s_tgt = self.encode_state(x_t1, teacher=True)
         return pred, s_tgt, s_t
@@ -315,12 +318,17 @@ class DrumJEPA(nn.Module):
 
         pred_s, s_tgt, s_t = self._state_branch(
             x_t, batch["a_t1"], batch["cc_t1"], x_t1, mask_s)
+        loss_s = self._masked_mse(pred_s, s_tgt, mask_s)
+        if not self.use_action:  # AO-JEPA: state loss only, action monitors reported as 0
+            z = loss_s.detach() * 0
+            return {"loss": loss_s, "loss_s": loss_s.detach(), "loss_a": z,
+                    "s_tea_std": self._tok_std(s_tgt), "s_stu_std": self._tok_std(s_t),
+                    "a_tea_std": z, "a_stu_std": z}
         a_t = self.encode_action(batch["a_t"], batch["cc_t"])
         a_t1_vis = self.encode_action(batch["a_t1"], batch["cc_t1"], keep=vis_a)
         with torch.no_grad():
             a_tgt = self.encode_action(batch["a_t1"], batch["cc_t1"], teacher=True)
 
-        loss_s = self._masked_mse(pred_s, s_tgt, mask_s)
         loss_a = self._masked_mse(self.g(a_t, a_t1_vis, vis_a), a_tgt, mask_a)
         return {
             "loss": loss_s + self.lambda_a * loss_a,
@@ -341,8 +349,10 @@ class DrumJEPA(nn.Module):
                 b_t.copy_(b_s)
 
     def n_params(self) -> dict:
-        n = {k: sum(p.numel() for p in m.parameters())
-             for k, m in (("Es", self.Es_stu), ("Ea", self.Ea_stu), ("f", self.f), ("g", self.g))}
+        mods = [("Es", self.Es_stu), ("f", self.f)]
+        if self.use_action:
+            mods += [("Ea", self.Ea_stu), ("g", self.g)]
+        n = {k: sum(p.numel() for p in m.parameters()) for k, m in mods}
         n["total_student"] = sum(n.values())
         return n
 
