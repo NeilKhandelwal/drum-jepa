@@ -65,3 +65,11 @@ model wins on ring-out and under full mask.
 
 Watch for: at 75% mask the visible s_{t+1} tokens leak kit identity to both
 models, which can hide the value of s_t. The full-mask comparison is the control.
+
+## E3 representation and baselines (2026-09-05)
+Clip embedding = mean over the 128 state tokens of the teacher (EMA) encoder's
+output; student reported alongside. Probes are trained on train-split embeddings
+and scored on validation and test. Two baselines bound the probe numbers: mean
+log-mel of the clip (kit identity may be trivially linear in the raw spectrogram)
+and a random-init encoder with the same architecture (what the architecture gives
+for free). A probe result only counts if the trained encoder beats both.
