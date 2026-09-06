@@ -1,0 +1,1659 @@
+{
+ "run_dir": "runs/drumjepa_v1",
+ "run_name": "drumjepa_v1",
+ "epoch": 19,
+ "step": 12400,
+ "seed": 0,
+ "kits": [
+  "Jazz",
+  "60s Rock",
+  "Studio (Live Room)",
+  "Cassette (Lo-Fi Compress)",
+  "Ele-Drum",
+  "808 Simple",
+  "Acoustic Kit",
+  "Unplugged",
+  "Bigga Bop (Jazz)",
+  "Heavy Metal",
+  "Pop-Rock (Studio)",
+  "Raw Dnb (Layered Hybrid)",
+  "909 Simple",
+  "Deep Daft"
+ ],
+ "train_kits": [
+  "Jazz",
+  "60s Rock",
+  "Studio (Live Room)",
+  "Cassette (Lo-Fi Compress)",
+  "Ele-Drum",
+  "808 Simple"
+ ],
+ "heldout_kits": [
+  "Acoustic Kit",
+  "Unplugged",
+  "Bigga Bop (Jazz)",
+  "Heavy Metal",
+  "Pop-Rock (Studio)",
+  "Raw Dnb (Layered Hybrid)",
+  "909 Simple",
+  "Deep Daft"
+ ],
+ "n_train_clips": 39998,
+ "n_clips": {
+  "train": 39998,
+  "validation": 28476,
+  "test": 27440
+ },
+ "chance": {
+  "6way": 0.16666666666666666,
+  "14way": 0.07142857142857142
+ },
+ "n_bootstrap": 1000,
+ "git_commit": "00d5779f32d93872efea8c0f85c8414f54e4340e",
+ "probes": {
+  "6way": {
+   "teacher": {
+    "linear": {
+     "validation": 0.9919698459521469,
+     "test": 0.9971088435374149
+    },
+    "mlp": {
+     "validation": 0.9913143231727303,
+     "test": 0.9965986394557823
+    }
+   },
+   "student": {
+    "linear": {
+     "validation": 0.9922976073418551,
+     "test": 0.9968537414965987
+    },
+    "mlp": {
+     "validation": 0.9907407407407407,
+     "test": 0.996343537414966
+    }
+   },
+   "random": {
+    "linear": {
+     "validation": 0.9188790560471977,
+     "test": 0.9487244897959184
+    },
+    "mlp": {
+     "validation": 0.919288757784333,
+     "test": 0.9521258503401361
+    }
+   },
+   "raw_mel": {
+    "linear": {
+     "validation": 0.9948377581120944,
+     "test": 0.9973639455782313
+    },
+    "mlp": {
+     "validation": 0.9859882005899705,
+     "test": 0.9946428571428572
+    }
+   }
+  },
+  "14way": {
+   "teacher": {
+    "linear": {
+     "validation": 0.8837266470009832,
+     "test": 0.9227769679300292
+    },
+    "mlp": {
+     "validation": 0.8831998876246664,
+     "test": 0.9222667638483965
+    }
+   },
+   "student": {
+    "linear": {
+     "validation": 0.8824273072060683,
+     "test": 0.9208819241982508
+    },
+    "mlp": {
+     "validation": 0.8868169686753757,
+     "test": 0.9257288629737609
+    }
+   },
+   "random": {
+    "linear": {
+     "validation": 0.8579856721449641,
+     "test": 0.9080174927113702
+    },
+    "mlp": {
+     "validation": 0.887449079926956,
+     "test": 0.9260568513119534
+    }
+   },
+   "raw_mel": {
+    "linear": {
+     "validation": 0.993959825818233,
+     "test": 0.996100583090379
+    },
+    "mlp": {
+     "validation": 0.9882708245540104,
+     "test": 0.9911807580174927
+    }
+   }
+  }
+ },
+ "per_kit_recall": {
+  "validation": [
+   0.9557522123893806,
+   0.9665683382497542,
+   0.9636184857423795,
+   0.9655850540806293,
+   0.9665683382497542,
+   0.9941002949852508,
+   0.7153392330383481,
+   0.9011799410029498,
+   0.900196656833825,
+   0.7841691248770895,
+   0.7128810226155359,
+   0.8849557522123894,
+   0.8908554572271387,
+   0.7704031465093412
+  ],
+  "test": [
+   0.986734693877551,
+   0.9744897959183674,
+   0.9780612244897959,
+   0.9903061224489796,
+   0.9719387755102041,
+   0.9959183673469387,
+   0.8209183673469388,
+   0.9346938775510204,
+   0.9132653061224489,
+   0.8744897959183674,
+   0.8142857142857143,
+   0.9030612244897959,
+   0.9423469387755102,
+   0.8183673469387756
+  ]
+ },
+ "confusion_validation": [
+  [
+   0.9557522123893806,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0024582104228121925,
+   0.016224188790560472,
+   0.019174041297935103,
+   0.0,
+   0.0,
+   0.0024582104228121925,
+   0.00344149459193707,
+   0.0004916420845624386
+  ],
+  [
+   0.0009832841691248771,
+   0.9665683382497542,
+   0.00344149459193707,
+   0.0,
+   0.0,
+   0.0,
+   0.0009832841691248771,
+   0.0004916420845624386,
+   0.0,
+   0.0014749262536873156,
+   0.009341199606686333,
+   0.012782694198623401,
+   0.0,
+   0.003933136676499509
+  ],
+  [
+   0.0,
+   0.0014749262536873156,
+   0.9636184857423795,
+   0.0,
+   0.0,
+   0.0,
+   0.009341199606686333,
+   0.0004916420845624386,
+   0.0004916420845624386,
+   0.0,
+   0.007866273352999017,
+   0.014257620452310717,
+   0.0,
+   0.0024582104228121925
+  ],
+  [
+   0.0,
+   0.0,
+   0.0,
+   0.9655850540806293,
+   0.0,
+   0.0,
+   0.0,
+   0.0009832841691248771,
+   0.009341199606686333,
+   0.0,
+   0.012782694198623401,
+   0.00344149459193707,
+   0.007374631268436578,
+   0.0004916420845624386
+  ],
+  [
+   0.0,
+   0.0009832841691248771,
+   0.0014749262536873156,
+   0.0004916420845624386,
+   0.9665683382497542,
+   0.0029498525073746312,
+   0.0009832841691248771,
+   0.0,
+   0.0019665683382497543,
+   0.005408062930186824,
+   0.007866273352999017,
+   0.008849557522123894,
+   0.0,
+   0.0024582104228121925
+  ],
+  [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0004916420845624386,
+   0.9941002949852508,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0029498525073746312,
+   0.0024582104228121925,
+   0.0
+  ],
+  [
+   0.0,
+   0.0004916420845624386,
+   0.014749262536873156,
+   0.0,
+   0.00344149459193707,
+   0.0024582104228121925,
+   0.7153392330383481,
+   0.02654867256637168,
+   0.0688298918387414,
+   0.048672566371681415,
+   0.03933136676499508,
+   0.03048180924287119,
+   0.006391347099311701,
+   0.043264503441494594
+  ],
+  [
+   0.010816125860373648,
+   0.0,
+   0.0,
+   0.0,
+   0.0004916420845624386,
+   0.0,
+   0.022123893805309734,
+   0.9011799410029498,
+   0.015732546705998034,
+   0.00688298918387414,
+   0.015240904621435595,
+   0.01720747295968535,
+   0.003933136676499509,
+   0.006391347099311701
+  ],
+  [
+   0.0014749262536873156,
+   0.0,
+   0.0004916420845624386,
+   0.0,
+   0.0009832841691248771,
+   0.0,
+   0.026057030481809244,
+   0.008849557522123894,
+   0.900196656833825,
+   0.02704031465093412,
+   0.005408062930186824,
+   0.01327433628318584,
+   0.011307767944936086,
+   0.004916420845624385
+  ],
+  [
+   0.0004916420845624386,
+   0.0009832841691248771,
+   0.0,
+   0.0,
+   0.00688298918387414,
+   0.0014749262536873156,
+   0.05211406096361849,
+   0.018190757128810225,
+   0.05555555555555555,
+   0.7841691248770895,
+   0.02064896755162242,
+   0.02064896755162242,
+   0.011307767944936086,
+   0.02753195673549656
+  ],
+  [
+   0.0,
+   0.021632251720747297,
+   0.006391347099311701,
+   0.004916420845624385,
+   0.007374631268436578,
+   0.0,
+   0.049164208456243856,
+   0.009341199606686333,
+   0.02359882005899705,
+   0.030973451327433628,
+   0.7128810226155359,
+   0.05752212389380531,
+   0.004424778761061947,
+   0.07177974434611603
+  ],
+  [
+   0.0004916420845624386,
+   0.003933136676499509,
+   0.0,
+   0.0,
+   0.0004916420845624386,
+   0.0,
+   0.004424778761061947,
+   0.0009832841691248771,
+   0.008357915437561455,
+   0.02015732546705998,
+   0.019174041297935103,
+   0.8849557522123894,
+   0.038348082595870206,
+   0.018682399213372666
+  ],
+  [
+   0.0004916420845624386,
+   0.0004916420845624386,
+   0.0,
+   0.0,
+   0.0024582104228121925,
+   0.0014749262536873156,
+   0.0058997050147492625,
+   0.0029498525073746312,
+   0.014749262536873156,
+   0.019174041297935103,
+   0.01376597836774828,
+   0.04523107177974434,
+   0.8908554572271387,
+   0.0024582104228121925
+  ],
+  [
+   0.0,
+   0.007374631268436578,
+   0.003933136676499509,
+   0.0009832841691248771,
+   0.004424778761061947,
+   0.0,
+   0.06588003933136677,
+   0.007866273352999017,
+   0.02015732546705998,
+   0.019174041297935103,
+   0.058505408062930184,
+   0.037856440511307765,
+   0.00344149459193707,
+   0.7704031465093412
+  ]
+ ],
+ "n_swap_windows": 2034,
+ "max_swaps": 4000,
+ "geometry": {
+  "consistency": {
+   "teacher": {
+    "n_windows": 512,
+    "n_pairs": 182,
+    "dim": 256,
+    "within_pair_cosine": 0.31610587009468294,
+    "within_ci": [
+     0.3085011929117791,
+     0.3255475591612641
+    ],
+    "between_pair_cosine": 0.06842108436254946,
+    "between_ci": [
+     0.06595058550798721,
+     0.07121214615409344
+    ],
+    "between_pair_direction_cosine": 0.23500166106701967,
+    "between_direction_ci": [
+     0.2314041065180441,
+     0.23753750233159887
+    ]
+   },
+   "random": {
+    "n_windows": 512,
+    "n_pairs": 182,
+    "dim": 256,
+    "within_pair_cosine": 0.3534841709223532,
+    "within_ci": [
+     0.3402823790558189,
+     0.3713288606623075
+    ],
+    "between_pair_cosine": 0.19945196171163307,
+    "between_ci": [
+     0.190194753687202,
+     0.2107686516120411
+    ],
+    "between_pair_direction_cosine": 0.548323793535786,
+    "between_direction_ci": [
+     0.5396638014452714,
+     0.5547213151453271
+    ]
+   },
+   "raw_mel": {
+    "n_windows": 512,
+    "n_pairs": 182,
+    "dim": 229,
+    "within_pair_cosine": 0.5004976346174662,
+    "within_ci": [
+     0.48271801581781687,
+     0.5192063908168849
+    ],
+    "between_pair_cosine": 0.14869044751427563,
+    "between_ci": [
+     0.14260205961466685,
+     0.15527575845109354
+    ],
+    "between_pair_direction_cosine": 0.28367613642169065,
+    "between_direction_ci": [
+     0.27862323633227964,
+     0.28895647074351505
+    ]
+   }
+  },
+  "transfer": {
+   "teacher": {
+    "all": 0.7310501691032664,
+    "both_train": 0.9431333988856113,
+    "one_heldout": 0.8133194034742708,
+    "both_heldout": 0.476401179941003,
+    "all_n_pairs": 182,
+    "both_train_n_pairs": 30,
+    "one_heldout_n_pairs": 96,
+    "both_heldout_n_pairs": 56,
+    "per_pair": {
+     "Jazz -> 60s Rock": 0.9557522123893806,
+     "Jazz -> Studio (Live Room)": 0.960668633235005,
+     "Jazz -> Cassette (Lo-Fi Compress)": 0.976401179941003,
+     "Jazz -> Ele-Drum": 0.8259587020648967,
+     "Jazz -> 808 Simple": 0.9665683382497542,
+     "Jazz -> Acoustic Kit": 0.8888888888888888,
+     "Jazz -> Unplugged": 0.8947885939036382,
+     "Jazz -> Bigga Bop (Jazz)": 0.6666666666666666,
+     "Jazz -> Heavy Metal": 0.6302851524090463,
+     "Jazz -> Pop-Rock (Studio)": 0.7177974434611603,
+     "Jazz -> Raw Dnb (Layered Hybrid)": 0.9793510324483776,
+     "Jazz -> 909 Simple": 0.9793510324483776,
+     "Jazz -> Deep Daft": 0.567354965585054,
+     "60s Rock -> Jazz": 0.9006882989183874,
+     "60s Rock -> Studio (Live Room)": 0.9773844641101278,
+     "60s Rock -> Cassette (Lo-Fi Compress)": 0.9950835791543756,
+     "60s Rock -> Ele-Drum": 0.76007866273353,
+     "60s Rock -> 808 Simple": 0.9714847590953786,
+     "60s Rock -> Acoustic Kit": 0.8593903638151426,
+     "60s Rock -> Unplugged": 0.983284169124877,
+     "60s Rock -> Bigga Bop (Jazz)": 0.3647984267453294,
+     "60s Rock -> Heavy Metal": 0.3638151425762045,
+     "60s Rock -> Pop-Rock (Studio)": 0.6263520157325467,
+     "60s Rock -> Raw Dnb (Layered Hybrid)": 0.8200589970501475,
+     "60s Rock -> 909 Simple": 0.9203539823008849,
+     "60s Rock -> Deep Daft": 0.5388397246804326,
+     "Studio (Live Room) -> Jazz": 0.9478859390363815,
+     "Studio (Live Room) -> 60s Rock": 0.992133726647001,
+     "Studio (Live Room) -> Cassette (Lo-Fi Compress)": 0.9655850540806293,
+     "Studio (Live Room) -> Ele-Drum": 0.8633235004916421,
+     "Studio (Live Room) -> 808 Simple": 0.9665683382497542,
+     "Studio (Live Room) -> Acoustic Kit": 0.8702064896755162,
+     "Studio (Live Room) -> Unplugged": 0.9469026548672567,
+     "Studio (Live Room) -> Bigga Bop (Jazz)": 0.6066863323500492,
+     "Studio (Live Room) -> Heavy Metal": 0.7286135693215339,
+     "Studio (Live Room) -> Pop-Rock (Studio)": 0.6224188790560472,
+     "Studio (Live Room) -> Raw Dnb (Layered Hybrid)": 0.9852507374631269,
+     "Studio (Live Room) -> 909 Simple": 0.9528023598820059,
+     "Studio (Live Room) -> Deep Daft": 0.5722713864306784,
+     "Cassette (Lo-Fi Compress) -> Jazz": 0.9419862340216323,
+     "Cassette (Lo-Fi Compress) -> 60s Rock": 0.967551622418879,
+     "Cassette (Lo-Fi Compress) -> Studio (Live Room)": 0.9734513274336283,
+     "Cassette (Lo-Fi Compress) -> Ele-Drum": 0.8298918387413963,
+     "Cassette (Lo-Fi Compress) -> 808 Simple": 0.9705014749262537,
+     "Cassette (Lo-Fi Compress) -> Acoustic Kit": 0.9469026548672567,
+     "Cassette (Lo-Fi Compress) -> Unplugged": 0.992133726647001,
+     "Cassette (Lo-Fi Compress) -> Bigga Bop (Jazz)": 0.6774827925270404,
+     "Cassette (Lo-Fi Compress) -> Heavy Metal": 0.7620452310717798,
+     "Cassette (Lo-Fi Compress) -> Pop-Rock (Studio)": 0.8308751229105211,
+     "Cassette (Lo-Fi Compress) -> Raw Dnb (Layered Hybrid)": 0.9872173058013766,
+     "Cassette (Lo-Fi Compress) -> 909 Simple": 0.9793510324483776,
+     "Cassette (Lo-Fi Compress) -> Deep Daft": 0.6430678466076696,
+     "Ele-Drum -> Jazz": 0.9862340216322517,
+     "Ele-Drum -> 60s Rock": 0.9882005899705014,
+     "Ele-Drum -> Studio (Live Room)": 0.9990167158308751,
+     "Ele-Drum -> Cassette (Lo-Fi Compress)": 1.0,
+     "Ele-Drum -> 808 Simple": 1.0,
+     "Ele-Drum -> Acoustic Kit": 0.9134709931170109,
+     "Ele-Drum -> Unplugged": 0.9970501474926253,
+     "Ele-Drum -> Bigga Bop (Jazz)": 0.632251720747296,
+     "Ele-Drum -> Heavy Metal": 0.6637168141592921,
+     "Ele-Drum -> Pop-Rock (Studio)": 0.7846607669616519,
+     "Ele-Drum -> Raw Dnb (Layered Hybrid)": 0.9646017699115044,
+     "Ele-Drum -> 909 Simple": 0.9852507374631269,
+     "Ele-Drum -> Deep Daft": 0.5565388397246804,
+     "808 Simple -> Jazz": 0.9311701081612586,
+     "808 Simple -> 60s Rock": 0.9646017699115044,
+     "808 Simple -> Studio (Live Room)": 0.9655850540806293,
+     "808 Simple -> Cassette (Lo-Fi Compress)": 0.9793510324483776,
+     "808 Simple -> Ele-Drum": 0.7708947885939036,
+     "808 Simple -> Acoustic Kit": 0.9154375614552606,
+     "808 Simple -> Unplugged": 0.9557522123893806,
+     "808 Simple -> Bigga Bop (Jazz)": 0.5250737463126843,
+     "808 Simple -> Heavy Metal": 0.6135693215339233,
+     "808 Simple -> Pop-Rock (Studio)": 0.7050147492625368,
+     "808 Simple -> Raw Dnb (Layered Hybrid)": 0.9065880039331367,
+     "808 Simple -> 909 Simple": 0.9164208456243854,
+     "808 Simple -> Deep Daft": 0.5889872173058014,
+     "Acoustic Kit -> Jazz": 0.8151425762045231,
+     "Acoustic Kit -> 60s Rock": 0.9026548672566371,
+     "Acoustic Kit -> Studio (Live Room)": 0.5939036381514258,
+     "Acoustic Kit -> Cassette (Lo-Fi Compress)": 0.9931170108161259,
+     "Acoustic Kit -> Ele-Drum": 0.5929203539823009,
+     "Acoustic Kit -> 808 Simple": 0.9026548672566371,
+     "Acoustic Kit -> Unplugged": 0.7649950835791544,
+     "Acoustic Kit -> Bigga Bop (Jazz)": 0.16519174041297935,
+     "Acoustic Kit -> Heavy Metal": 0.1248770894788594,
+     "Acoustic Kit -> Pop-Rock (Studio)": 0.10226155358898721,
+     "Acoustic Kit -> Raw Dnb (Layered Hybrid)": 0.5624385447394297,
+     "Acoustic Kit -> 909 Simple": 0.5712881022615536,
+     "Acoustic Kit -> Deep Daft": 0.18682399213372664,
+     "Unplugged -> Jazz": 0.7797443461160275,
+     "Unplugged -> 60s Rock": 0.9429695181907571,
+     "Unplugged -> Studio (Live Room)": 0.951819075712881,
+     "Unplugged -> Cassette (Lo-Fi Compress)": 0.976401179941003,
+     "Unplugged -> Ele-Drum": 0.76007866273353,
+     "Unplugged -> 808 Simple": 0.9685349065880039,
+     "Unplugged -> Acoustic Kit": 0.7315634218289085,
+     "Unplugged -> Bigga Bop (Jazz)": 0.512291052114061,
+     "Unplugged -> Heavy Metal": 0.5270403146509341,
+     "Unplugged -> Pop-Rock (Studio)": 0.599803343166175,
+     "Unplugged -> Raw Dnb (Layered Hybrid)": 0.9262536873156342,
+     "Unplugged -> 909 Simple": 0.9174041297935103,
+     "Unplugged -> Deep Daft": 0.44051130776794495,
+     "Bigga Bop (Jazz) -> Jazz": 0.8062930186823992,
+     "Bigga Bop (Jazz) -> 60s Rock": 0.872173058013766,
+     "Bigga Bop (Jazz) -> Studio (Live Room)": 0.943952802359882,
+     "Bigga Bop (Jazz) -> Cassette (Lo-Fi Compress)": 0.9980334316617503,
+     "Bigga Bop (Jazz) -> Ele-Drum": 0.5545722713864307,
+     "Bigga Bop (Jazz) -> 808 Simple": 0.95968534906588,
+     "Bigga Bop (Jazz) -> Acoustic Kit": 0.3893805309734513,
+     "Bigga Bop (Jazz) -> Unplugged": 0.7492625368731564,
+     "Bigga Bop (Jazz) -> Heavy Metal": 0.24385447394296952,
+     "Bigga Bop (Jazz) -> Pop-Rock (Studio)": 0.23500491642084562,
+     "Bigga Bop (Jazz) -> Raw Dnb (Layered Hybrid)": 0.5899705014749262,
+     "Bigga Bop (Jazz) -> 909 Simple": 0.6106194690265486,
+     "Bigga Bop (Jazz) -> Deep Daft": 0.1976401179941003,
+     "Heavy Metal -> Jazz": 0.7374631268436578,
+     "Heavy Metal -> 60s Rock": 0.9164208456243854,
+     "Heavy Metal -> Studio (Live Room)": 0.984267453294002,
+     "Heavy Metal -> Cassette (Lo-Fi Compress)": 1.0,
+     "Heavy Metal -> Ele-Drum": 0.5771878072763028,
+     "Heavy Metal -> 808 Simple": 0.9528023598820059,
+     "Heavy Metal -> Acoustic Kit": 0.4778761061946903,
+     "Heavy Metal -> Unplugged": 0.8308751229105211,
+     "Heavy Metal -> Bigga Bop (Jazz)": 0.12094395280235988,
+     "Heavy Metal -> Pop-Rock (Studio)": 0.2232055063913471,
+     "Heavy Metal -> Raw Dnb (Layered Hybrid)": 0.512291052114061,
+     "Heavy Metal -> 909 Simple": 0.647984267453294,
+     "Heavy Metal -> Deep Daft": 0.176007866273353,
+     "Pop-Rock (Studio) -> Jazz": 0.7659783677482792,
+     "Pop-Rock (Studio) -> 60s Rock": 0.7935103244837758,
+     "Pop-Rock (Studio) -> Studio (Live Room)": 0.6922320550639135,
+     "Pop-Rock (Studio) -> Cassette (Lo-Fi Compress)": 0.8780727630285152,
+     "Pop-Rock (Studio) -> Ele-Drum": 0.5014749262536873,
+     "Pop-Rock (Studio) -> 808 Simple": 0.8731563421828908,
+     "Pop-Rock (Studio) -> Acoustic Kit": 0.1927236971484759,
+     "Pop-Rock (Studio) -> Unplugged": 0.6509341199606686,
+     "Pop-Rock (Studio) -> Bigga Bop (Jazz)": 0.17994100294985252,
+     "Pop-Rock (Studio) -> Heavy Metal": 0.08357915437561456,
+     "Pop-Rock (Studio) -> Raw Dnb (Layered Hybrid)": 0.4532940019665683,
+     "Pop-Rock (Studio) -> 909 Simple": 0.49557522123893805,
+     "Pop-Rock (Studio) -> Deep Daft": 0.10816125860373647,
+     "Raw Dnb (Layered Hybrid) -> Jazz": 0.8357915437561455,
+     "Raw Dnb (Layered Hybrid) -> 60s Rock": 0.6902654867256637,
+     "Raw Dnb (Layered Hybrid) -> Studio (Live Room)": 0.9823008849557522,
+     "Raw Dnb (Layered Hybrid) -> Cassette (Lo-Fi Compress)": 1.0,
+     "Raw Dnb (Layered Hybrid) -> Ele-Drum": 0.6214355948869223,
+     "Raw Dnb (Layered Hybrid) -> 808 Simple": 0.9813176007866273,
+     "Raw Dnb (Layered Hybrid) -> Acoustic Kit": 0.6686332350049164,
+     "Raw Dnb (Layered Hybrid) -> Unplugged": 0.8859390363815143,
+     "Raw Dnb (Layered Hybrid) -> Bigga Bop (Jazz)": 0.2497541789577188,
+     "Raw Dnb (Layered Hybrid) -> Heavy Metal": 0.14060963618485742,
+     "Raw Dnb (Layered Hybrid) -> Pop-Rock (Studio)": 0.3343166175024582,
+     "Raw Dnb (Layered Hybrid) -> 909 Simple": 0.7482792527040315,
+     "Raw Dnb (Layered Hybrid) -> Deep Daft": 0.288102261553589,
+     "909 Simple -> Jazz": 0.8662733529990168,
+     "909 Simple -> 60s Rock": 0.887905604719764,
+     "909 Simple -> Studio (Live Room)": 0.9734513274336283,
+     "909 Simple -> Cassette (Lo-Fi Compress)": 0.9950835791543756,
+     "909 Simple -> Ele-Drum": 0.6420845624385447,
+     "909 Simple -> 808 Simple": 0.7856440511307768,
+     "909 Simple -> Acoustic Kit": 0.7000983284169124,
+     "909 Simple -> Unplugged": 0.8525073746312685,
+     "909 Simple -> Bigga Bop (Jazz)": 0.46017699115044247,
+     "909 Simple -> Heavy Metal": 0.3225172074729597,
+     "909 Simple -> Pop-Rock (Studio)": 0.48279252704031467,
+     "909 Simple -> Raw Dnb (Layered Hybrid)": 0.783677482792527,
+     "909 Simple -> Deep Daft": 0.37954768928220256,
+     "Deep Daft -> Jazz": 0.7846607669616519,
+     "Deep Daft -> 60s Rock": 0.9164208456243854,
+     "Deep Daft -> Studio (Live Room)": 0.9891838741396264,
+     "Deep Daft -> Cassette (Lo-Fi Compress)": 0.9941002949852508,
+     "Deep Daft -> Ele-Drum": 0.6951819075712881,
+     "Deep Daft -> 808 Simple": 0.9203539823008849,
+     "Deep Daft -> Acoustic Kit": 0.6804326450344149,
+     "Deep Daft -> Unplugged": 0.9183874139626352,
+     "Deep Daft -> Bigga Bop (Jazz)": 0.12979351032448377,
+     "Deep Daft -> Heavy Metal": 0.3028515240904621,
+     "Deep Daft -> Pop-Rock (Studio)": 0.45427728613569324,
+     "Deep Daft -> Raw Dnb (Layered Hybrid)": 0.7305801376597837,
+     "Deep Daft -> 909 Simple": 0.8633235004916421
+    }
+   },
+   "random": {
+    "all": 0.1116135585162134,
+    "both_train": 0.14618157980989838,
+    "one_heldout": 0.11627335299901671,
+    "both_heldout": 0.08510675656693355,
+    "all_n_pairs": 182,
+    "both_train_n_pairs": 30,
+    "one_heldout_n_pairs": 96,
+    "both_heldout_n_pairs": 56,
+    "per_pair": {
+     "Jazz -> 60s Rock": 0.10914454277286136,
+     "Jazz -> Studio (Live Room)": 0.0855457227138643,
+     "Jazz -> Cassette (Lo-Fi Compress)": 0.10816125860373647,
+     "Jazz -> Ele-Drum": 0.0058997050147492625,
+     "Jazz -> 808 Simple": 0.5142576204523107,
+     "Jazz -> Acoustic Kit": 0.015732546705998034,
+     "Jazz -> Unplugged": 0.008849557522123894,
+     "Jazz -> Bigga Bop (Jazz)": 0.008849557522123894,
+     "Jazz -> Heavy Metal": 0.5535889872173058,
+     "Jazz -> Pop-Rock (Studio)": 0.014749262536873156,
+     "Jazz -> Raw Dnb (Layered Hybrid)": 0.01966568338249754,
+     "Jazz -> 909 Simple": 0.025565388397246803,
+     "Jazz -> Deep Daft": 0.038348082595870206,
+     "60s Rock -> Jazz": 0.03048180924287119,
+     "60s Rock -> Studio (Live Room)": 0.07571288102261553,
+     "60s Rock -> Cassette (Lo-Fi Compress)": 0.11012782694198624,
+     "60s Rock -> Ele-Drum": 0.012782694198623401,
+     "60s Rock -> 808 Simple": 0.5703048180924287,
+     "60s Rock -> Acoustic Kit": 0.00983284169124877,
+     "60s Rock -> Unplugged": 0.011799410029498525,
+     "60s Rock -> Bigga Bop (Jazz)": 0.008849557522123894,
+     "60s Rock -> Heavy Metal": 0.5004916420845624,
+     "60s Rock -> Pop-Rock (Studio)": 0.02261553588987217,
+     "60s Rock -> Raw Dnb (Layered Hybrid)": 0.02359882005899705,
+     "60s Rock -> 909 Simple": 0.03343166175024582,
+     "60s Rock -> Deep Daft": 0.04523107177974434,
+     "Studio (Live Room) -> Jazz": 0.03343166175024582,
+     "Studio (Live Room) -> 60s Rock": 0.12684365781710916,
+     "Studio (Live Room) -> Cassette (Lo-Fi Compress)": 0.1248770894788594,
+     "Studio (Live Room) -> Ele-Drum": 0.004916420845624385,
+     "Studio (Live Room) -> 808 Simple": 0.5132743362831859,
+     "Studio (Live Room) -> Acoustic Kit": 0.008849557522123894,
+     "Studio (Live Room) -> Unplugged": 0.0058997050147492625,
+     "Studio (Live Room) -> Bigga Bop (Jazz)": 0.01376597836774828,
+     "Studio (Live Room) -> Heavy Metal": 0.5526057030481809,
+     "Studio (Live Room) -> Pop-Rock (Studio)": 0.011799410029498525,
+     "Studio (Live Room) -> Raw Dnb (Layered Hybrid)": 0.017699115044247787,
+     "Studio (Live Room) -> 909 Simple": 0.02261553588987217,
+     "Studio (Live Room) -> Deep Daft": 0.03933136676499508,
+     "Cassette (Lo-Fi Compress) -> Jazz": 0.06096361848574238,
+     "Cassette (Lo-Fi Compress) -> 60s Rock": 0.1376597836774828,
+     "Cassette (Lo-Fi Compress) -> Studio (Live Room)": 0.0943952802359882,
+     "Cassette (Lo-Fi Compress) -> Ele-Drum": 0.021632251720747297,
+     "Cassette (Lo-Fi Compress) -> 808 Simple": 0.5889872173058014,
+     "Cassette (Lo-Fi Compress) -> Acoustic Kit": 0.02753195673549656,
+     "Cassette (Lo-Fi Compress) -> Unplugged": 0.01966568338249754,
+     "Cassette (Lo-Fi Compress) -> Bigga Bop (Jazz)": 0.021632251720747297,
+     "Cassette (Lo-Fi Compress) -> Heavy Metal": 0.5978367748279253,
+     "Cassette (Lo-Fi Compress) -> Pop-Rock (Studio)": 0.014749262536873156,
+     "Cassette (Lo-Fi Compress) -> Raw Dnb (Layered Hybrid)": 0.05014749262536873,
+     "Cassette (Lo-Fi Compress) -> 909 Simple": 0.058997050147492625,
+     "Cassette (Lo-Fi Compress) -> Deep Daft": 0.06489675516224189,
+     "Ele-Drum -> Jazz": 0.02064896755162242,
+     "Ele-Drum -> 60s Rock": 0.09537856440511308,
+     "Ele-Drum -> Studio (Live Room)": 0.048180924287118974,
+     "Ele-Drum -> Cassette (Lo-Fi Compress)": 0.10127826941986234,
+     "Ele-Drum -> 808 Simple": 0.4523107177974435,
+     "Ele-Drum -> Acoustic Kit": 0.010816125860373648,
+     "Ele-Drum -> Unplugged": 0.00983284169124877,
+     "Ele-Drum -> Bigga Bop (Jazz)": 0.00688298918387414,
+     "Ele-Drum -> Heavy Metal": 0.599803343166175,
+     "Ele-Drum -> Pop-Rock (Studio)": 0.017699115044247787,
+     "Ele-Drum -> Raw Dnb (Layered Hybrid)": 0.012782694198623401,
+     "Ele-Drum -> 909 Simple": 0.02261553588987217,
+     "Ele-Drum -> Deep Daft": 0.03048180924287119,
+     "808 Simple -> Jazz": 0.018682399213372666,
+     "808 Simple -> 60s Rock": 0.11012782694198624,
+     "808 Simple -> Studio (Live Room)": 0.058997050147492625,
+     "808 Simple -> Cassette (Lo-Fi Compress)": 0.1111111111111111,
+     "808 Simple -> Ele-Drum": 0.03933136676499508,
+     "808 Simple -> Acoustic Kit": 0.008849557522123894,
+     "808 Simple -> Unplugged": 0.02261553588987217,
+     "808 Simple -> Bigga Bop (Jazz)": 0.018682399213372666,
+     "808 Simple -> Heavy Metal": 0.4916420845624385,
+     "808 Simple -> Pop-Rock (Studio)": 0.029498525073746312,
+     "808 Simple -> Raw Dnb (Layered Hybrid)": 0.0688298918387414,
+     "808 Simple -> 909 Simple": 0.07472959685349066,
+     "808 Simple -> Deep Daft": 0.0471976401179941,
+     "Acoustic Kit -> Jazz": 0.04129793510324484,
+     "Acoustic Kit -> 60s Rock": 0.12684365781710916,
+     "Acoustic Kit -> Studio (Live Room)": 0.08357915437561456,
+     "Acoustic Kit -> Cassette (Lo-Fi Compress)": 0.11406096361848574,
+     "Acoustic Kit -> Ele-Drum": 0.008849557522123894,
+     "Acoustic Kit -> 808 Simple": 0.5024582104228122,
+     "Acoustic Kit -> Unplugged": 0.008849557522123894,
+     "Acoustic Kit -> Bigga Bop (Jazz)": 0.014749262536873156,
+     "Acoustic Kit -> Heavy Metal": 0.5614552605703048,
+     "Acoustic Kit -> Pop-Rock (Studio)": 0.012782694198623401,
+     "Acoustic Kit -> Raw Dnb (Layered Hybrid)": 0.02359882005899705,
+     "Acoustic Kit -> 909 Simple": 0.025565388397246803,
+     "Acoustic Kit -> Deep Daft": 0.043264503441494594,
+     "Unplugged -> Jazz": 0.043264503441494594,
+     "Unplugged -> 60s Rock": 0.10816125860373647,
+     "Unplugged -> Studio (Live Room)": 0.07669616519174041,
+     "Unplugged -> Cassette (Lo-Fi Compress)": 0.10619469026548672,
+     "Unplugged -> Ele-Drum": 0.007866273352999017,
+     "Unplugged -> 808 Simple": 0.5132743362831859,
+     "Unplugged -> Acoustic Kit": 0.017699115044247787,
+     "Unplugged -> Bigga Bop (Jazz)": 0.0058997050147492625,
+     "Unplugged -> Heavy Metal": 0.5467059980334317,
+     "Unplugged -> Pop-Rock (Studio)": 0.00983284169124877,
+     "Unplugged -> Raw Dnb (Layered Hybrid)": 0.018682399213372666,
+     "Unplugged -> 909 Simple": 0.017699115044247787,
+     "Unplugged -> Deep Daft": 0.038348082595870206,
+     "Bigga Bop (Jazz) -> Jazz": 0.03638151425762045,
+     "Bigga Bop (Jazz) -> 60s Rock": 0.10127826941986234,
+     "Bigga Bop (Jazz) -> Studio (Live Room)": 0.06489675516224189,
+     "Bigga Bop (Jazz) -> Cassette (Lo-Fi Compress)": 0.127826941986234,
+     "Bigga Bop (Jazz) -> Ele-Drum": 0.008849557522123894,
+     "Bigga Bop (Jazz) -> 808 Simple": 0.5181907571288102,
+     "Bigga Bop (Jazz) -> Acoustic Kit": 0.010816125860373648,
+     "Bigga Bop (Jazz) -> Unplugged": 0.004916420845624385,
+     "Bigga Bop (Jazz) -> Heavy Metal": 0.5624385447394297,
+     "Bigga Bop (Jazz) -> Pop-Rock (Studio)": 0.00688298918387414,
+     "Bigga Bop (Jazz) -> Raw Dnb (Layered Hybrid)": 0.021632251720747297,
+     "Bigga Bop (Jazz) -> 909 Simple": 0.024582104228121928,
+     "Bigga Bop (Jazz) -> Deep Daft": 0.03638151425762045,
+     "Heavy Metal -> Jazz": 0.032448377581120944,
+     "Heavy Metal -> 60s Rock": 0.11701081612586037,
+     "Heavy Metal -> Studio (Live Room)": 0.0776794493608653,
+     "Heavy Metal -> Cassette (Lo-Fi Compress)": 0.10816125860373647,
+     "Heavy Metal -> Ele-Drum": 0.0058997050147492625,
+     "Heavy Metal -> 808 Simple": 0.48279252704031467,
+     "Heavy Metal -> Acoustic Kit": 0.012782694198623401,
+     "Heavy Metal -> Unplugged": 0.007866273352999017,
+     "Heavy Metal -> Bigga Bop (Jazz)": 0.010816125860373648,
+     "Heavy Metal -> Pop-Rock (Studio)": 0.010816125860373648,
+     "Heavy Metal -> Raw Dnb (Layered Hybrid)": 0.014749262536873156,
+     "Heavy Metal -> 909 Simple": 0.025565388397246803,
+     "Heavy Metal -> Deep Daft": 0.04129793510324484,
+     "Pop-Rock (Studio) -> Jazz": 0.03343166175024582,
+     "Pop-Rock (Studio) -> 60s Rock": 0.1111111111111111,
+     "Pop-Rock (Studio) -> Studio (Live Room)": 0.0776794493608653,
+     "Pop-Rock (Studio) -> Cassette (Lo-Fi Compress)": 0.11406096361848574,
+     "Pop-Rock (Studio) -> Ele-Drum": 0.008849557522123894,
+     "Pop-Rock (Studio) -> 808 Simple": 0.5162241887905604,
+     "Pop-Rock (Studio) -> Acoustic Kit": 0.00983284169124877,
+     "Pop-Rock (Studio) -> Unplugged": 0.0058997050147492625,
+     "Pop-Rock (Studio) -> Bigga Bop (Jazz)": 0.00983284169124877,
+     "Pop-Rock (Studio) -> Heavy Metal": 0.5476892822025565,
+     "Pop-Rock (Studio) -> Raw Dnb (Layered Hybrid)": 0.021632251720747297,
+     "Pop-Rock (Studio) -> 909 Simple": 0.025565388397246803,
+     "Pop-Rock (Studio) -> Deep Daft": 0.03638151425762045,
+     "Raw Dnb (Layered Hybrid) -> Jazz": 0.02654867256637168,
+     "Raw Dnb (Layered Hybrid) -> 60s Rock": 0.08947885939036382,
+     "Raw Dnb (Layered Hybrid) -> Studio (Live Room)": 0.06293018682399214,
+     "Raw Dnb (Layered Hybrid) -> Cassette (Lo-Fi Compress)": 0.09636184857423795,
+     "Raw Dnb (Layered Hybrid) -> Ele-Drum": 0.004916420845624385,
+     "Raw Dnb (Layered Hybrid) -> 808 Simple": 0.4857423795476893,
+     "Raw Dnb (Layered Hybrid) -> Acoustic Kit": 0.00983284169124877,
+     "Raw Dnb (Layered Hybrid) -> Unplugged": 0.008849557522123894,
+     "Raw Dnb (Layered Hybrid) -> Bigga Bop (Jazz)": 0.008849557522123894,
+     "Raw Dnb (Layered Hybrid) -> Heavy Metal": 0.5683382497541789,
+     "Raw Dnb (Layered Hybrid) -> Pop-Rock (Studio)": 0.010816125860373648,
+     "Raw Dnb (Layered Hybrid) -> 909 Simple": 0.01966568338249754,
+     "Raw Dnb (Layered Hybrid) -> Deep Daft": 0.035398230088495575,
+     "909 Simple -> Jazz": 0.035398230088495575,
+     "909 Simple -> 60s Rock": 0.10226155358898721,
+     "909 Simple -> Studio (Live Room)": 0.06981317600786627,
+     "909 Simple -> Cassette (Lo-Fi Compress)": 0.1376597836774828,
+     "909 Simple -> Ele-Drum": 0.018682399213372666,
+     "909 Simple -> 808 Simple": 0.5634218289085545,
+     "909 Simple -> Acoustic Kit": 0.01671583087512291,
+     "909 Simple -> Unplugged": 0.012782694198623401,
+     "909 Simple -> Bigga Bop (Jazz)": 0.00983284169124877,
+     "909 Simple -> Heavy Metal": 0.5427728613569321,
+     "909 Simple -> Pop-Rock (Studio)": 0.02654867256637168,
+     "909 Simple -> Raw Dnb (Layered Hybrid)": 0.04523107177974434,
+     "909 Simple -> Deep Daft": 0.05014749262536873,
+     "Deep Daft -> Jazz": 0.02359882005899705,
+     "Deep Daft -> 60s Rock": 0.1160275319567355,
+     "Deep Daft -> Studio (Live Room)": 0.06489675516224189,
+     "Deep Daft -> Cassette (Lo-Fi Compress)": 0.08357915437561456,
+     "Deep Daft -> Ele-Drum": 0.012782694198623401,
+     "Deep Daft -> 808 Simple": 0.5506391347099312,
+     "Deep Daft -> Acoustic Kit": 0.00688298918387414,
+     "Deep Daft -> Unplugged": 0.008849557522123894,
+     "Deep Daft -> Bigga Bop (Jazz)": 0.010816125860373648,
+     "Deep Daft -> Heavy Metal": 0.5093411996066863,
+     "Deep Daft -> Pop-Rock (Studio)": 0.01671583087512291,
+     "Deep Daft -> Raw Dnb (Layered Hybrid)": 0.02654867256637168,
+     "Deep Daft -> 909 Simple": 0.02753195673549656
+    }
+   },
+   "raw_mel": {
+    "all": 0.3020411250499746,
+    "both_train": 0.37748279252704026,
+    "one_heldout": 0.31021591281547034,
+    "both_heldout": 0.24761202416069672,
+    "all_n_pairs": 182,
+    "both_train_n_pairs": 30,
+    "one_heldout_n_pairs": 96,
+    "both_heldout_n_pairs": 56,
+    "per_pair": {
+     "Jazz -> 60s Rock": 0.4768928220255654,
+     "Jazz -> Studio (Live Room)": 0.11307767944936087,
+     "Jazz -> Cassette (Lo-Fi Compress)": 0.4749262536873156,
+     "Jazz -> Ele-Drum": 0.4247787610619469,
+     "Jazz -> 808 Simple": 0.6076696165191741,
+     "Jazz -> Acoustic Kit": 0.14945919370698132,
+     "Jazz -> Unplugged": 0.09242871189773845,
+     "Jazz -> Bigga Bop (Jazz)": 0.27728613569321536,
+     "Jazz -> Heavy Metal": 0.6823992133726647,
+     "Jazz -> Pop-Rock (Studio)": 0.061946902654867256,
+     "Jazz -> Raw Dnb (Layered Hybrid)": 0.4198623402163225,
+     "Jazz -> 909 Simple": 0.23795476892822026,
+     "Jazz -> Deep Daft": 0.176007866273353,
+     "60s Rock -> Jazz": 0.14749262536873156,
+     "60s Rock -> Studio (Live Room)": 0.12684365781710916,
+     "60s Rock -> Cassette (Lo-Fi Compress)": 0.4749262536873156,
+     "60s Rock -> Ele-Drum": 0.41887905604719766,
+     "60s Rock -> 808 Simple": 0.655850540806293,
+     "60s Rock -> Acoustic Kit": 0.17305801376597837,
+     "60s Rock -> Unplugged": 0.10226155358898721,
+     "60s Rock -> Bigga Bop (Jazz)": 0.2910521140609636,
+     "60s Rock -> Heavy Metal": 0.6656833824975418,
+     "60s Rock -> Pop-Rock (Studio)": 0.0776794493608653,
+     "60s Rock -> Raw Dnb (Layered Hybrid)": 0.4306784660766962,
+     "60s Rock -> 909 Simple": 0.24385447394296952,
+     "60s Rock -> Deep Daft": 0.1710914454277286,
+     "Studio (Live Room) -> Jazz": 0.15240904621435594,
+     "Studio (Live Room) -> 60s Rock": 0.4857423795476893,
+     "Studio (Live Room) -> Cassette (Lo-Fi Compress)": 0.4857423795476893,
+     "Studio (Live Room) -> Ele-Drum": 0.4139626352015733,
+     "Studio (Live Room) -> 808 Simple": 0.6243854473942969,
+     "Studio (Live Room) -> Acoustic Kit": 0.15732546705998032,
+     "Studio (Live Room) -> Unplugged": 0.10029498525073746,
+     "Studio (Live Room) -> Bigga Bop (Jazz)": 0.3077679449360865,
+     "Studio (Live Room) -> Heavy Metal": 0.6902654867256637,
+     "Studio (Live Room) -> Pop-Rock (Studio)": 0.07571288102261553,
+     "Studio (Live Room) -> Raw Dnb (Layered Hybrid)": 0.4385447394296952,
+     "Studio (Live Room) -> 909 Simple": 0.23697148475909538,
+     "Studio (Live Room) -> Deep Daft": 0.1887905604719764,
+     "Cassette (Lo-Fi Compress) -> Jazz": 0.17305801376597837,
+     "Cassette (Lo-Fi Compress) -> 60s Rock": 0.49557522123893805,
+     "Cassette (Lo-Fi Compress) -> Studio (Live Room)": 0.17010816125860373,
+     "Cassette (Lo-Fi Compress) -> Ele-Drum": 0.512291052114061,
+     "Cassette (Lo-Fi Compress) -> 808 Simple": 0.7079646017699115,
+     "Cassette (Lo-Fi Compress) -> Acoustic Kit": 0.19567354965585054,
+     "Cassette (Lo-Fi Compress) -> Unplugged": 0.119960668633235,
+     "Cassette (Lo-Fi Compress) -> Bigga Bop (Jazz)": 0.3893805309734513,
+     "Cassette (Lo-Fi Compress) -> Heavy Metal": 0.7177974434611603,
+     "Cassette (Lo-Fi Compress) -> Pop-Rock (Studio)": 0.0943952802359882,
+     "Cassette (Lo-Fi Compress) -> Raw Dnb (Layered Hybrid)": 0.5329400196656834,
+     "Cassette (Lo-Fi Compress) -> 909 Simple": 0.3225172074729597,
+     "Cassette (Lo-Fi Compress) -> Deep Daft": 0.22418879056047197,
+     "Ele-Drum -> Jazz": 0.14257620452310718,
+     "Ele-Drum -> 60s Rock": 0.43952802359882004,
+     "Ele-Drum -> Studio (Live Room)": 0.11406096361848574,
+     "Ele-Drum -> Cassette (Lo-Fi Compress)": 0.47000983284169123,
+     "Ele-Drum -> 808 Simple": 0.5270403146509341,
+     "Ele-Drum -> Acoustic Kit": 0.14257620452310718,
+     "Ele-Drum -> Unplugged": 0.09242871189773845,
+     "Ele-Drum -> Bigga Bop (Jazz)": 0.27630285152409045,
+     "Ele-Drum -> Heavy Metal": 0.6941986234021632,
+     "Ele-Drum -> Pop-Rock (Studio)": 0.06588003933136677,
+     "Ele-Drum -> Raw Dnb (Layered Hybrid)": 0.3942969518190757,
+     "Ele-Drum -> 909 Simple": 0.2025565388397247,
+     "Ele-Drum -> Deep Daft": 0.13274336283185842,
+     "808 Simple -> Jazz": 0.1071779744346116,
+     "808 Simple -> 60s Rock": 0.4857423795476893,
+     "808 Simple -> Studio (Live Room)": 0.09832841691248771,
+     "808 Simple -> Cassette (Lo-Fi Compress)": 0.40904621435594885,
+     "808 Simple -> Ele-Drum": 0.38839724680432647,
+     "808 Simple -> Acoustic Kit": 0.13667649950835792,
+     "808 Simple -> Unplugged": 0.063913470993117,
+     "808 Simple -> Bigga Bop (Jazz)": 0.28416912487708945,
+     "808 Simple -> Heavy Metal": 0.6057030481809242,
+     "808 Simple -> Pop-Rock (Studio)": 0.05801376597836775,
+     "808 Simple -> Raw Dnb (Layered Hybrid)": 0.4296951819075713,
+     "808 Simple -> 909 Simple": 0.26843657817109146,
+     "808 Simple -> Deep Daft": 0.15732546705998032,
+     "Acoustic Kit -> Jazz": 0.11799410029498525,
+     "Acoustic Kit -> 60s Rock": 0.4503441494591937,
+     "Acoustic Kit -> Studio (Live Room)": 0.09931170108161258,
+     "Acoustic Kit -> Cassette (Lo-Fi Compress)": 0.4631268436578171,
+     "Acoustic Kit -> Ele-Drum": 0.3805309734513274,
+     "Acoustic Kit -> 808 Simple": 0.591937069813176,
+     "Acoustic Kit -> Unplugged": 0.07177974434611603,
+     "Acoustic Kit -> Bigga Bop (Jazz)": 0.2910521140609636,
+     "Acoustic Kit -> Heavy Metal": 0.6794493608652901,
+     "Acoustic Kit -> Pop-Rock (Studio)": 0.06096361848574238,
+     "Acoustic Kit -> Raw Dnb (Layered Hybrid)": 0.41789577187807275,
+     "Acoustic Kit -> 909 Simple": 0.21140609636184857,
+     "Acoustic Kit -> Deep Daft": 0.13569321533923304,
+     "Unplugged -> Jazz": 0.15634218289085547,
+     "Unplugged -> 60s Rock": 0.504424778761062,
+     "Unplugged -> Studio (Live Room)": 0.15142576204523106,
+     "Unplugged -> Cassette (Lo-Fi Compress)": 0.4503441494591937,
+     "Unplugged -> Ele-Drum": 0.3824975417895772,
+     "Unplugged -> 808 Simple": 0.5968534906588004,
+     "Unplugged -> Acoustic Kit": 0.1455260570304818,
+     "Unplugged -> Bigga Bop (Jazz)": 0.2871189773844641,
+     "Unplugged -> Heavy Metal": 0.6823992133726647,
+     "Unplugged -> Pop-Rock (Studio)": 0.0943952802359882,
+     "Unplugged -> Raw Dnb (Layered Hybrid)": 0.3952802359882006,
+     "Unplugged -> 909 Simple": 0.24778761061946902,
+     "Unplugged -> Deep Daft": 0.18289085545722714,
+     "Bigga Bop (Jazz) -> Jazz": 0.10324483775811209,
+     "Bigga Bop (Jazz) -> 60s Rock": 0.4591937069813176,
+     "Bigga Bop (Jazz) -> Studio (Live Room)": 0.08259587020648967,
+     "Bigga Bop (Jazz) -> Cassette (Lo-Fi Compress)": 0.46804326450344147,
+     "Bigga Bop (Jazz) -> Ele-Drum": 0.3638151425762045,
+     "Bigga Bop (Jazz) -> 808 Simple": 0.6194690265486725,
+     "Bigga Bop (Jazz) -> Acoustic Kit": 0.13864306784660768,
+     "Bigga Bop (Jazz) -> Unplugged": 0.08259587020648967,
+     "Bigga Bop (Jazz) -> Heavy Metal": 0.6705998033431662,
+     "Bigga Bop (Jazz) -> Pop-Rock (Studio)": 0.046214355948869225,
+     "Bigga Bop (Jazz) -> Raw Dnb (Layered Hybrid)": 0.3992133726647001,
+     "Bigga Bop (Jazz) -> 909 Simple": 0.2153392330383481,
+     "Bigga Bop (Jazz) -> Deep Daft": 0.14650934119960668,
+     "Heavy Metal -> Jazz": 0.11504424778761062,
+     "Heavy Metal -> 60s Rock": 0.48180924287118976,
+     "Heavy Metal -> Studio (Live Room)": 0.09144542772861357,
+     "Heavy Metal -> Cassette (Lo-Fi Compress)": 0.41297935103244837,
+     "Heavy Metal -> Ele-Drum": 0.3087512291052114,
+     "Heavy Metal -> 808 Simple": 0.5634218289085545,
+     "Heavy Metal -> Acoustic Kit": 0.10914454277286136,
+     "Heavy Metal -> Unplugged": 0.07669616519174041,
+     "Heavy Metal -> Bigga Bop (Jazz)": 0.2831858407079646,
+     "Heavy Metal -> Pop-Rock (Studio)": 0.06784660766961652,
+     "Heavy Metal -> Raw Dnb (Layered Hybrid)": 0.3775811209439528,
+     "Heavy Metal -> 909 Simple": 0.20058997050147492,
+     "Heavy Metal -> Deep Daft": 0.13864306784660768,
+     "Pop-Rock (Studio) -> Jazz": 0.11209439528023599,
+     "Pop-Rock (Studio) -> 60s Rock": 0.47099311701081614,
+     "Pop-Rock (Studio) -> Studio (Live Room)": 0.09341199606686332,
+     "Pop-Rock (Studio) -> Cassette (Lo-Fi Compress)": 0.41887905604719766,
+     "Pop-Rock (Studio) -> Ele-Drum": 0.34611602753195675,
+     "Pop-Rock (Studio) -> 808 Simple": 0.6066863323500492,
+     "Pop-Rock (Studio) -> Acoustic Kit": 0.1248770894788594,
+     "Pop-Rock (Studio) -> Unplugged": 0.0727630285152409,
+     "Pop-Rock (Studio) -> Bigga Bop (Jazz)": 0.27630285152409045,
+     "Pop-Rock (Studio) -> Heavy Metal": 0.6460176991150443,
+     "Pop-Rock (Studio) -> Raw Dnb (Layered Hybrid)": 0.3913470993117011,
+     "Pop-Rock (Studio) -> 909 Simple": 0.21140609636184857,
+     "Pop-Rock (Studio) -> Deep Daft": 0.13864306784660768,
+     "Raw Dnb (Layered Hybrid) -> Jazz": 0.08849557522123894,
+     "Raw Dnb (Layered Hybrid) -> 60s Rock": 0.4424778761061947,
+     "Raw Dnb (Layered Hybrid) -> Studio (Live Room)": 0.08456243854473942,
+     "Raw Dnb (Layered Hybrid) -> Cassette (Lo-Fi Compress)": 0.4169124877089479,
+     "Raw Dnb (Layered Hybrid) -> Ele-Drum": 0.319567354965585,
+     "Raw Dnb (Layered Hybrid) -> 808 Simple": 0.5614552605703048,
+     "Raw Dnb (Layered Hybrid) -> Acoustic Kit": 0.12291052114060963,
+     "Raw Dnb (Layered Hybrid) -> Unplugged": 0.058997050147492625,
+     "Raw Dnb (Layered Hybrid) -> Bigga Bop (Jazz)": 0.19567354965585054,
+     "Raw Dnb (Layered Hybrid) -> Heavy Metal": 0.6538839724680433,
+     "Raw Dnb (Layered Hybrid) -> Pop-Rock (Studio)": 0.04228121927236971,
+     "Raw Dnb (Layered Hybrid) -> 909 Simple": 0.1848574237954769,
+     "Raw Dnb (Layered Hybrid) -> Deep Daft": 0.11209439528023599,
+     "909 Simple -> Jazz": 0.13864306784660768,
+     "909 Simple -> 60s Rock": 0.4759095378564405,
+     "909 Simple -> Studio (Live Room)": 0.13470993117010815,
+     "909 Simple -> Cassette (Lo-Fi Compress)": 0.4729596853490659,
+     "909 Simple -> Ele-Drum": 0.3864306784660767,
+     "909 Simple -> 808 Simple": 0.5870206489675516,
+     "909 Simple -> Acoustic Kit": 0.168141592920354,
+     "909 Simple -> Unplugged": 0.10226155358898721,
+     "909 Simple -> Bigga Bop (Jazz)": 0.2910521140609636,
+     "909 Simple -> Heavy Metal": 0.6676499508357916,
+     "909 Simple -> Pop-Rock (Studio)": 0.06293018682399214,
+     "909 Simple -> Raw Dnb (Layered Hybrid)": 0.43166175024582104,
+     "909 Simple -> Deep Daft": 0.16322517207472959,
+     "Deep Daft -> Jazz": 0.1248770894788594,
+     "Deep Daft -> 60s Rock": 0.4995083579154376,
+     "Deep Daft -> Studio (Live Room)": 0.127826941986234,
+     "Deep Daft -> Cassette (Lo-Fi Compress)": 0.44346116027531957,
+     "Deep Daft -> Ele-Drum": 0.3834808259587021,
+     "Deep Daft -> 808 Simple": 0.5791543756145526,
+     "Deep Daft -> Acoustic Kit": 0.13569321533923304,
+     "Deep Daft -> Unplugged": 0.0688298918387414,
+     "Deep Daft -> Bigga Bop (Jazz)": 0.30383480825958703,
+     "Deep Daft -> Heavy Metal": 0.6696165191740413,
+     "Deep Daft -> Pop-Rock (Studio)": 0.08259587020648967,
+     "Deep Daft -> Raw Dnb (Layered Hybrid)": 0.408062930186824,
+     "Deep Daft -> 909 Simple": 0.2222222222222222
+    }
+   }
+  },
+  "predictor_swap": {
+   "target_fixed": {
+    "all": {
+     "n": 2034,
+     "win_rate": 0.9287118977384464,
+     "ci": [
+      0.9166125952318926,
+      0.9399528090061631
+     ],
+     "err_sB_tB": 0.2119501382112503,
+     "err_sA_tB": 0.24648325145244598
+    },
+    "B_train_kit": {
+     "n": 783,
+     "win_rate": 0.9923371647509579,
+     "ci": [
+      0.9860487324636967,
+      0.9974905140997701
+     ],
+     "err_sB_tB": 0.09605998545885086,
+     "err_sA_tB": 0.11533025652170181
+    },
+    "B_heldout_kit": {
+     "n": 1251,
+     "win_rate": 0.8888888888888888,
+     "ci": [
+      0.8713035591335205,
+      0.905293198286821
+     ],
+     "err_sB_tB": 0.28448566794395447,
+     "err_sA_tB": 0.32857179641723633
+    }
+   },
+   "target_swap": {
+    "B_train_kit": {
+     "n": 783,
+     "win_rate": 0.7369093231162197,
+     "ci": [
+      0.7024651841868823,
+      0.773837505087505
+     ],
+     "err_sB_tB": 0.09605998545885086,
+     "err_sB_tA": 0.11629071831703186
+    }
+   }
+  }
+ },
+ "heldout": {
+  "mapping": [
+   [
+    0.09636184857423795,
+    0.018190757128810225,
+    0.5707964601769911,
+    0.004916420845624385,
+    0.29646017699115046,
+    0.01327433628318584
+   ],
+   [
+    0.8711897738446411,
+    0.0014749262536873156,
+    0.09144542772861357,
+    0.006391347099311701,
+    0.028023598820058997,
+    0.0014749262536873156
+   ],
+   [
+    0.28416912487708945,
+    0.06981317600786627,
+    0.1455260570304818,
+    0.02654867256637168,
+    0.471976401179941,
+    0.0019665683382497543
+   ],
+   [
+    0.16175024582104228,
+    0.10570304818092428,
+    0.08357915437561456,
+    0.03146509341199607,
+    0.6081612586037365,
+    0.009341199606686333
+   ],
+   [
+    0.035398230088495575,
+    0.08603736479842675,
+    0.3107177974434612,
+    0.288102261553589,
+    0.2777777777777778,
+    0.0019665683382497543
+   ],
+   [
+    0.06047197640117994,
+    0.5801376597836775,
+    0.06735496558505408,
+    0.018190757128810225,
+    0.26548672566371684,
+    0.008357915437561455
+   ],
+   [
+    0.11750245821042281,
+    0.03343166175024582,
+    0.051622418879056046,
+    0.07718780727630285,
+    0.19174041297935104,
+    0.5285152409046214
+   ],
+   [
+    0.03982300884955752,
+    0.07964601769911504,
+    0.11651917404129794,
+    0.028023598820058997,
+    0.7340216322517208,
+    0.0019665683382497543
+   ]
+  ],
+  "expectations": {
+   "Acoustic Kit": true,
+   "Unplugged": true,
+   "Bigga Bop (Jazz)": false,
+   "Heavy Metal": false,
+   "Pop-Rock (Studio)": true,
+   "Raw Dnb (Layered Hybrid)": false,
+   "909 Simple": true,
+   "Deep Daft": true
+  },
+  "centroid_cosine_distance": [
+   [
+    0.0,
+    0.29139095544815063,
+    0.29891490936279297,
+    0.30310630798339844,
+    0.3018672466278076,
+    0.3259478807449341,
+    0.20981836318969727,
+    0.05087614059448242,
+    0.19393450021743774,
+    0.2110474705696106,
+    0.20025736093521118,
+    0.25080162286758423,
+    0.2544324994087219,
+    0.24978399276733398
+   ],
+   [
+    0.29139095544815063,
+    0.0,
+    0.32521629333496094,
+    0.34530168771743774,
+    0.232616126537323,
+    0.25240063667297363,
+    0.20431262254714966,
+    0.24066686630249023,
+    0.15634530782699585,
+    0.14602410793304443,
+    0.15680712461471558,
+    0.06359022855758667,
+    0.17863130569458008,
+    0.16932624578475952
+   ],
+   [
+    0.29891490936279297,
+    0.32521629333496094,
+    0.0,
+    0.28887128829956055,
+    0.31817007064819336,
+    0.30887895822525024,
+    0.06897979974746704,
+    0.22436469793319702,
+    0.21670889854431152,
+    0.22978872060775757,
+    0.13138389587402344,
+    0.2666667103767395,
+    0.24615544080734253,
+    0.24669718742370605
+   ],
+   [
+    0.30310630798339844,
+    0.34530168771743774,
+    0.28887128829956055,
+    0.0,
+    0.36295509338378906,
+    0.31777942180633545,
+    0.24512135982513428,
+    0.26293647289276123,
+    0.2664496898651123,
+    0.27960675954818726,
+    0.1684805154800415,
+    0.3163233995437622,
+    0.26502329111099243,
+    0.2975412607192993
+   ],
+   [
+    0.3018672466278076,
+    0.232616126537323,
+    0.31817007064819336,
+    0.36295509338378906,
+    0.0,
+    0.2856031060218811,
+    0.14349818229675293,
+    0.2664278745651245,
+    0.089236319065094,
+    0.05637991428375244,
+    0.13592398166656494,
+    0.14442282915115356,
+    0.19225704669952393,
+    0.02735304832458496
+   ],
+   [
+    0.3259478807449341,
+    0.25240063667297363,
+    0.30887895822525024,
+    0.31777942180633545,
+    0.2856031060218811,
+    0.0,
+    0.2184198498725891,
+    0.28531455993652344,
+    0.22443795204162598,
+    0.22172141075134277,
+    0.2031528353691101,
+    0.22808438539505005,
+    0.11017221212387085,
+    0.23242807388305664
+   ],
+   [
+    0.20981836318969727,
+    0.20431262254714966,
+    0.06897979974746704,
+    0.24512135982513428,
+    0.14349818229675293,
+    0.2184198498725891,
+    0.0,
+    0.11115419864654541,
+    0.04951447248458862,
+    0.05637139081954956,
+    0.022682547569274902,
+    0.09839862585067749,
+    0.09256327152252197,
+    0.07839733362197876
+   ],
+   [
+    0.05087614059448242,
+    0.24066686630249023,
+    0.22436469793319702,
+    0.26293647289276123,
+    0.2664278745651245,
+    0.28531455993652344,
+    0.11115419864654541,
+    0.0,
+    0.09641420841217041,
+    0.12547725439071655,
+    0.09503459930419922,
+    0.14443618059158325,
+    0.13440364599227905,
+    0.178855299949646
+   ],
+   [
+    0.19393450021743774,
+    0.15634530782699585,
+    0.21670889854431152,
+    0.2664496898651123,
+    0.089236319065094,
+    0.22443795204162598,
+    0.04951447248458862,
+    0.09641420841217041,
+    0.0,
+    0.008037447929382324,
+    0.0294492244720459,
+    0.04271888732910156,
+    0.05926048755645752,
+    0.027187228202819824
+   ],
+   [
+    0.2110474705696106,
+    0.14602410793304443,
+    0.22978872060775757,
+    0.27960675954818726,
+    0.05637991428375244,
+    0.22172141075134277,
+    0.05637139081954956,
+    0.12547725439071655,
+    0.008037447929382324,
+    0.0,
+    0.03865325450897217,
+    0.03922557830810547,
+    0.07390153408050537,
+    0.01574540138244629
+   ],
+   [
+    0.20025736093521118,
+    0.15680712461471558,
+    0.13138389587402344,
+    0.1684805154800415,
+    0.13592398166656494,
+    0.2031528353691101,
+    0.022682547569274902,
+    0.09503459930419922,
+    0.0294492244720459,
+    0.03865325450897217,
+    0.0,
+    0.061759233474731445,
+    0.06164276599884033,
+    0.06222355365753174
+   ],
+   [
+    0.25080162286758423,
+    0.06359022855758667,
+    0.2666667103767395,
+    0.3163233995437622,
+    0.14442282915115356,
+    0.22808438539505005,
+    0.09839862585067749,
+    0.14443618059158325,
+    0.04271888732910156,
+    0.03922557830810547,
+    0.061759233474731445,
+    0.0,
+    0.07605135440826416,
+    0.07635676860809326
+   ],
+   [
+    0.2544324994087219,
+    0.17863130569458008,
+    0.24615544080734253,
+    0.26502329111099243,
+    0.19225704669952393,
+    0.11017221212387085,
+    0.09256327152252197,
+    0.13440364599227905,
+    0.05926048755645752,
+    0.07390153408050537,
+    0.06164276599884033,
+    0.07605135440826416,
+    0.0,
+    0.10470616817474365
+   ],
+   [
+    0.24978399276733398,
+    0.16932624578475952,
+    0.24669718742370605,
+    0.2975412607192993,
+    0.02735304832458496,
+    0.23242807388305664,
+    0.07839733362197876,
+    0.178855299949646,
+    0.027187228202819824,
+    0.01574540138244629,
+    0.06222355365753174,
+    0.07635676860809326,
+    0.10470616817474365,
+    0.0
+   ]
+  ],
+  "nearest_centroid": {
+   "Jazz": {
+    "kit": "Unplugged",
+    "distance": 0.05087614059448242
+   },
+   "60s Rock": {
+    "kit": "Raw Dnb (Layered Hybrid)",
+    "distance": 0.06359022855758667
+   },
+   "Studio (Live Room)": {
+    "kit": "Acoustic Kit",
+    "distance": 0.06897979974746704
+   },
+   "Cassette (Lo-Fi Compress)": {
+    "kit": "Pop-Rock (Studio)",
+    "distance": 0.1684805154800415
+   },
+   "Ele-Drum": {
+    "kit": "Deep Daft",
+    "distance": 0.02735304832458496
+   },
+   "808 Simple": {
+    "kit": "909 Simple",
+    "distance": 0.11017221212387085
+   },
+   "Acoustic Kit": {
+    "kit": "Pop-Rock (Studio)",
+    "distance": 0.022682547569274902
+   },
+   "Unplugged": {
+    "kit": "Jazz",
+    "distance": 0.05087614059448242
+   },
+   "Bigga Bop (Jazz)": {
+    "kit": "Heavy Metal",
+    "distance": 0.008037447929382324
+   },
+   "Heavy Metal": {
+    "kit": "Bigga Bop (Jazz)",
+    "distance": 0.008037447929382324
+   },
+   "Pop-Rock (Studio)": {
+    "kit": "Acoustic Kit",
+    "distance": 0.022682547569274902
+   },
+   "Raw Dnb (Layered Hybrid)": {
+    "kit": "Heavy Metal",
+    "distance": 0.03922557830810547
+   },
+   "909 Simple": {
+    "kit": "Bigga Bop (Jazz)",
+    "distance": 0.05926048755645752
+   },
+   "Deep Daft": {
+    "kit": "Heavy Metal",
+    "distance": 0.01574540138244629
+   }
+  }
+ },
+ "centroid_pca": {
+  "teacher": {
+   "coords": [
+    [
+     -2.6444883346557617,
+     -3.729736328125
+    ],
+    [
+     1.6890771389007568,
+     0.17256982624530792
+    ],
+    [
+     -2.7620489597320557,
+     1.4703692197799683
+    ],
+    [
+     -3.8087761402130127,
+     2.200090169906616
+    ],
+    [
+     2.748133897781372,
+     -0.1096147671341896
+    ],
+    [
+     -0.23127281665802002,
+     2.7464005947113037
+    ],
+    [
+     -0.4751240015029907,
+     0.3605809509754181
+    ],
+    [
+     -1.9199845790863037,
+     -2.867671012878418
+    ],
+    [
+     1.2252212762832642,
+     -0.7087581157684326
+    ],
+    [
+     1.677957534790039,
+     -0.49116018414497375
+    ],
+    [
+     -0.3295508325099945,
+     0.44943299889564514
+    ],
+    [
+     2.025432825088501,
+     -0.3490418493747711
+    ],
+    [
+     0.6667859554290771,
+     0.9486188888549805
+    ],
+    [
+     2.138636827468872,
+     -0.09208084642887115
+    ]
+   ],
+   "explained_variance": [
+    0.27988699078559875,
+    0.19049952924251556
+   ]
+  },
+  "random": {
+   "coords": [
+    [
+     -0.22313417494297028,
+     -0.3381192684173584
+    ],
+    [
+     2.0246241092681885,
+     -0.6212610602378845
+    ],
+    [
+     -0.2754177153110504,
+     -0.6397880911827087
+    ],
+    [
+     -1.1554043292999268,
+     -0.7802069187164307
+    ],
+    [
+     -1.8203468322753906,
+     0.625944972038269
+    ],
+    [
+     4.203200340270996,
+     0.677199125289917
+    ],
+    [
+     -1.086478352546692,
+     -0.103071428835392
+    ],
+    [
+     -0.5625696182250977,
+     0.13980087637901306
+    ],
+    [
+     -0.5365809202194214,
+     -0.20066902041435242
+    ],
+    [
+     -2.1100058555603027,
+     0.4087703824043274
+    ],
+    [
+     -0.13950838148593903,
+     -0.04302743077278137
+    ],
+    [
+     -0.9215378761291504,
+     0.8473893404006958
+    ],
+    [
+     1.1524852514266968,
+     0.4865596890449524
+    ],
+    [
+     1.4506746530532837,
+     -0.459520548582077
+    ]
+   ],
+   "explained_variance": [
+    0.8804082870483398,
+    0.08961356431245804
+   ]
+  },
+  "raw_mel": {
+   "coords": [
+    [
+     -0.13145394623279572,
+     -1.291675090789795
+    ],
+    [
+     2.0921003818511963,
+     0.4351341724395752
+    ],
+    [
+     -0.459953635931015,
+     0.03356609120965004
+    ],
+    [
+     -2.2180697917938232,
+     1.1178977489471436
+    ],
+    [
+     -1.7262685298919678,
+     -2.0350067615509033
+    ],
+    [
+     7.36242151260376,
+     0.3784741163253784
+    ],
+    [
+     -1.4885034561157227,
+     -0.40817391872406006
+    ],
+    [
+     -0.8654714822769165,
+     -0.7147861123085022
+    ],
+    [
+     -0.9158090949058533,
+     1.124576449394226
+    ],
+    [
+     -3.483602285385132,
+     -0.6360594630241394
+    ],
+    [
+     -0.5192873477935791,
+     -0.002044204855337739
+    ],
+    [
+     -1.7736916542053223,
+     2.9771294593811035
+    ],
+    [
+     2.048715591430664,
+     -0.5993976593017578
+    ],
+    [
+     2.078873872756958,
+     -0.3796347975730896
+    ]
+   ],
+   "explained_variance": [
+    0.5915889739990234,
+    0.11950430274009705
+   ]
+  }
+ },
+ "verdict": [
+  "Kit identity is readable from s_t: the 14-way linear probe on the teacher embedding scores 0.923 on test against 0.071 chance, and the 6-way probe on the train kits scores 0.997 against 0.167.",
+  "But notes/decisions.md sets the bar at beating both baselines, and on the 14-way task the teacher beats the random-init encoder: random-init encoder 0.908, raw mean log-mel 0.996. Kit identity is present in the embedding but no more linearly accessible there than in the mel spectrum it was computed from, so the probe alone does not show the model built a kit latent.",
+  "The counterfactual displacement e_B - e_A points the same way across performances (teacher: within-pair cosine 0.316 [0.309, 0.326] against 0.068 between disjoint kit pairs, a ratio of 4.6) and a kit vector estimated on half the windows moves a clip to the right kit's centroid on the other half 0.731 of the time (0.943 between train kits, 0.476 between two held-out kits).",
+  "Run through the same pipeline the controls give within/between ratios of 1.8 (random), 3.4 (raw_mel) against the teacher's 4.6, and transfer 0.112 (random), 0.302 (raw_mel) against 0.731 \u2014 both below the teacher, so this part of the geometry is built by training and not inherited from the spectrum; random and raw_mel have a higher raw within-pair cosine than the teacher but spread it over unrelated kit pairs too, which is what the ratio and the transfer test catch.",
+  "With the target held fixed at kit B's x_(t+1) and only s_t varying, giving the predictor the matching kit's state beats giving it a train kit's state on 0.992 of windows [0.986, 0.997] when B is a train kit and 0.889 [0.871, 0.905] when B was never trained on, so the predictor uses the kit of s_t, and it does so for unseen kits too.",
+  "Held-out kits embed sensibly on the whole: 5 of 8 send most of their clips to the train kit the annotations predict (Bigga Bop (Jazz), Heavy Metal, Raw Dnb (Layered Hybrid) did not), and the lowest 14-way test recall among them is 0.814 against 0.071 chance, so the encoder places unseen kits in distinct, mostly plausible regions."
+ ]
+}

@@ -135,7 +135,13 @@ E2 done 2026-09-05 (docs/experiments.md, docs/e2/): action-only baseline
 inputs (err 0.144 vs 0.095, win 0.78, both splits), not only on kit swap. Q1's
 "near tie" prediction is refuted: s_t carries information beyond kit identity
 (kit swap costs the full model 0.02; the rest of the 0.05 gap survives it). Ring-out
-subsets too small (42/36) to conclude. Next: E3 kit-latent probes.
+subsets too small (42/36) to conclude.
+E3 done 2026-09-06 (docs/experiments.md, docs/e3/): kit is linearly readable from
+s_t (0.92) but raw mel does better (0.996) and random-init nearly matches (0.91), so
+the probe does not count. The counterfactual geometry does: kit-vector transfer 0.73
+vs 0.11 (random) / 0.30 (raw mel); target-fixed predictor swap 0.99 train-B, 0.89
+held-out-B. Held-out kits separable and mostly placed as predicted. Next: E5
+(AO-JEPA baseline, needs one training run) or E4 (inverse model); ask Ziyu which.
 Next:
 1. (done) Fill configs/kits_v1.yaml, commit, push.
 2. Warm-up: warmup/lejepa_inet10.py (LeJEPA minimal, ViT-S/8, Imagenette,

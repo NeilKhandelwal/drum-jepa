@@ -92,3 +92,46 @@ so the gap is not an artifact of one run converging earlier, but a longer
 schedule would tighten the estimate. The 25% visible s_{t+1} tokens leak kit
 identity to both models at 75% masking, which makes the clean-condition gap a
 lower bound on what s_t contributes.
+
+### E3 — done (2026-09-06, drumjepa_v1 epoch 19, frozen teacher encoder, mean-pooled 256-d clip embedding)
+Every number is bounded by two controls run through the identical pipeline: a
+random-init encoder of the same architecture, and the raw mean log-mel of the clip.
+Full tables and figures: docs/e3/.
+
+| test | teacher | random-init | raw mel | chance |
+|---|---|---|---|---|
+| 14-way kit probe, linear, test acc | 0.923 | 0.908 | 0.996 | 0.071 |
+| kit-vector consistency, within / between pair cosine | 0.316 / 0.068 | 0.353 / 0.199 | 0.500 / 0.149 |  |
+| kit-vector transfer accuracy (all 182 ordered pairs) | 0.731 | 0.112 | 0.302 | ~0.07 |
+| predictor swap, target fixed, B train kit | 0.992 [0.986, 0.997] | | | 0.5 |
+| predictor swap, target fixed, B held-out kit | 0.889 [0.871, 0.905] | | | 0.5 |
+
+Verdict on Q2, in three parts.
+
+Readable, but not because of training. A linear probe reads the kit from s_t at
+0.92 on 14 kits, but the raw spectrum gives 0.996 and the untrained encoder 0.91.
+The encoder does not make kit identity more linearly accessible than the input
+already was; if anything it discards some. The probe half of Q2 does not count.
+
+Structured, and that is built by training. The displacement e_B - e_A between the
+same performance on two kits points the same way across performances 4.6x more
+than between unrelated kit pairs, against 1.8x for the untrained encoder and 3.4x
+for raw mel. A kit vector estimated on half the windows moves a clip to the right
+kit's centroid on the other half 73% of the time (94% between train kits, 48%
+between two held-out kits), against 11% and 30% for the controls. This is the
+counterfactual-swap geometry Q2 predicted, and neither control has it.
+
+Used by the predictor, for unseen kits too. With the target fixed as kit B's next
+clip, handing the predictor B's state instead of a train kit's state wins 99% of
+windows when B is a train kit and 89% when B was never trained on.
+
+Held-out kits land in plausible places: 5 of 8 map to the train kit the kit-split
+annotations predicted, and every held-out kit is separable (lowest 14-way recall
+0.81). The three misses (Bigga Bop, Heavy Metal, Raw Dnb) are absorbed by Ele-Drum
+under the 6-way probe while being separable at 0.87-0.91 in the 14-way one, so the
+6-way probe simply has no column that fits them.
+
+Caveat. The PCA of kit centroids shows the trained encoder spreading the six train
+kits wide and packing five of eight held-out kits into one cluster near Ele-Drum;
+the encoder's geometry is organized around the kits it trained on. The held-out
+transfer number (48%) says the same thing.
