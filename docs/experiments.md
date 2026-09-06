@@ -135,3 +135,76 @@ Caveat. The PCA of kit centroids shows the trained encoder spreading the six tra
 kits wide and packing five of eight held-out kits into one cluster near Ele-Drum;
 the encoder's geometry is organized around the kits it trained on. The held-out
 transfer number (48%) says the same thing.
+
+### E3 addendum — the same geometry on AO-JEPA (2026-09-06, docs/e3/aojepa/)
+Running E3 on the audio-only model (drumjepa_v1_aojepa, epoch 19) shows the kit
+geometry is a product of masked JEPA training on this data, not of action
+conditioning.
+
+| test | drum-JEPA | AO-JEPA | random-init | raw mel |
+|---|---|---|---|---|
+| kit-vector consistency ratio, within / between | 4.6 | 4.7 | 1.8 | 3.4 |
+| kit-vector transfer, all pairs | 0.731 | 0.580 | 0.112 | 0.302 |
+| kit-vector transfer, both train kits | 0.943 | 0.767 | 0.146 | 0.377 |
+| predictor swap, target fixed, held-out B | 0.889 | 0.942 | | |
+| 14-way kit probe, linear, test | 0.923 | 0.885 | 0.908 | 0.996 |
+
+Action conditioning leaves the geometry somewhat cleaner (transfer 0.73 vs 0.58)
+but does not create it. The E3 verdict "built by training" stands; "built by
+actions" would be wrong.
+
+### E4 — done (2026-09-06, inverse model on frozen states, docs/e4/)
+A 3.5M-param inverse model h reads the frozen tokens of x_t and x_{t+1} and
+decodes the frame-level drumroll and hi-hat track of the transition. Trained 8
+epochs on 20k transitions per representation, identical h throughout, onset
+threshold tuned on validation. Onset F1 at 50 ms tolerance, test split.
+
+| representation | train kits, macro F1 | held-out kits, macro F1 | velocity MAE (MIDI) |
+|---|---|---|---|
+| random-init encoder | 0.251 [0.235, 0.259] | 0.215 | 17.1 |
+| raw mel, same patching | 0.250 [0.236, 0.256] | 0.221 | 17.5 |
+| AO-JEPA | 0.164 [0.150, 0.170] | 0.165 | 21.4 |
+| drum-JEPA | 0.118 [0.102, 0.126] | 0.119 | 23.6 |
+| drum-JEPA + a_t | 0.126 | 0.129 | 22.8 |
+
+Drum-JEPA is last and loses to both controls by a factor of two. Handing h the
+previous action barely helps, so this is not groove continuation. The absolute F1s
+are low for everyone because the decoder is small and the positive-class weight is
+capped; the ranking is what E4 establishes.
+
+### E5 — done (2026-09-06, content probes vs AO-JEPA, docs/e5/)
+Per-250 ms-step probes on frozen, frequency-pooled state tokens, targets from the
+action of the same window. Linear onset probe, macro F1 at threshold 0.5, test split.
+
+| representation | train kits | held-out kits | 16 tokens concatenated (2k-clip subset) |
+|---|---|---|---|
+| raw mel | 0.583 | 0.277 | |
+| random-init encoder | 0.365 | 0.320 | |
+| AO-JEPA | 0.278 [0.258, 0.292] | 0.257 | 0.546 |
+| drum-JEPA | 0.223 [0.206, 0.234] | 0.188 | 0.482 |
+| class-prior baseline | 0.130 | 0.130 | |
+
+Velocity, timing and pedal position are recoverable only weakly from any
+representation (10-25% below the predict-the-mean baseline). Mean-pooling over
+frequency hides about half the onset content; the ordering survives without it.
+
+Verdict on Q1 across E2-E5. The state of an action-conditioned JEPA carries what
+the action does not determine, and drops what it does. E2: s_t improves prediction
+beyond the action, mostly through non-kit context. E3: kit identity is organized as
+a consistent direction, but AO-JEPA organizes it nearly as well. E4 and E5: action
+content (which drum, when, how hard) is less recoverable from drum-JEPA's state than
+from an untrained encoder, and removing action conditioning (AO-JEPA) recovers part
+of it. The mechanism is the objective: f receives a_{t+1} at every step, so the
+state encoder is never asked to encode it and 20 epochs of training discard it.
+
+What this means for the project. Drum-JEPA is not a better representation of drum
+audio than AO-JEPA on any probe run so far; it is a differently specialized one.
+The counterfactual kit lever still works (E1 kit swap 0.993, E3 swap 0.89-0.94), but
+it works for AO-JEPA too. The result that is specific to action conditioning is the
+negative one: action content is removed from the state. Whether that is a feature
+(a cleaner "environment" latent) or a defect depends on what the state is for, and
+that is the question to put to Ziyu before E6.
+
+Caveats. One seed per model; the E4 decoder was trained for a fixed 8 epochs and
+raw_mel+a_t was still improving; E5 probes use frequency-pooled tokens by default;
+the AO-JEPA predictor has 3.2M rather than 4.8M parameters (no cross-attention).

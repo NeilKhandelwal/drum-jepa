@@ -140,8 +140,17 @@ E3 done 2026-09-06 (docs/experiments.md, docs/e3/): kit is linearly readable fro
 s_t (0.92) but raw mel does better (0.996) and random-init nearly matches (0.91), so
 the probe does not count. The counterfactual geometry does: kit-vector transfer 0.73
 vs 0.11 (random) / 0.30 (raw mel); target-fixed predictor swap 0.99 train-B, 0.89
-held-out-B. Held-out kits separable and mostly placed as predicted. Next: E5
-(AO-JEPA baseline, needs one training run) or E4 (inverse model); ask Ziyu which.
+held-out-B. Held-out kits separable and mostly placed as predicted.
+E4+E5 done 2026-09-06 (docs/experiments.md, docs/e4/, docs/e5/, docs/e3/aojepa/).
+AO-JEPA baseline trained (drumjepa_v1_aojepa, use_action false). Findings: (1) the
+kit geometry is built by masked JEPA training, not by actions (AO-JEPA transfer 0.58
+vs 0.73); (2) action content is LESS recoverable from drum-JEPA's state than from an
+untrained encoder (E4 onset F1 0.12 vs 0.25; E5 linear probe 0.22 vs 0.37), and
+AO-JEPA sits between (0.16 / 0.28). Mechanism: f gets a_{t+1}, so the state never
+has to carry it. Q1 answer: the state carries what the action does not determine and
+drops what it does. Next: discuss with Ziyu whether that is the intended latent;
+candidate fixes to test: predict s_{t+1} from s_t only with action as auxiliary
+target, or a_t-reconstruction regularizer; then seeds.
 Next:
 1. (done) Fill configs/kits_v1.yaml, commit, push.
 2. Warm-up: warmup/lejepa_inet10.py (LeJEPA minimal, ViT-S/8, Imagenette,
