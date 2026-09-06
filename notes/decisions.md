@@ -98,3 +98,9 @@ Success: E5 linear onset probe rises from 0.22 to at least the untrained encoder
 Watch for: the head reads frequency-pooled tokens, so it can only push content into
 the pooled subspace; if the probe does not move, try the un-pooled head before
 raising the coefficient.
+
+## Cross-model prediction errors (2026-09-06)
+MSE in a model's own teacher space scales with that teacher's embedding spread.
+E2's full-vs-action-only comparison was fair only because both teachers had
+std ~1.1. Option A's teacher has std 1.89. Report error / mean per-dim teacher
+variance, or within-model win rates (E1), whenever comparing across models.

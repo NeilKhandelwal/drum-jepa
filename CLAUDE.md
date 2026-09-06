@@ -151,6 +151,12 @@ has to carry it. Q1 answer: the state carries what the action does not determine
 drops what it does. Next: discuss with Ziyu whether that is the intended latent;
 candidate fixes to test: predict s_{t+1} from s_t only with action as auxiliary
 target, or a_t-reconstruction regularizer; then seeds.
+Option A tested 2026-09-06 (drumjepa_v1_auxrec, aux_rec 1.0; docs/optionA/): action
+content restored and beats both controls (E5 0.63 vs 0.22; E4 0.46 vs 0.12; held-out
+0.48 vs raw mel 0.28) BUT prediction degrades (normalized error 0.21 vs 0.08; E2
+advantage over action-only gone; E1 kit swap 0.99 -> 0.94). A tradeoff at this
+weight. Next: aux_rec sweep 0.1 / 0.3 with normalized error + E1 as the prediction
+metrics; then talk to Ziyu.
 Next:
 1. (done) Fill configs/kits_v1.yaml, commit, push.
 2. Warm-up: warmup/lejepa_inet10.py (LeJEPA minimal, ViT-S/8, Imagenette,

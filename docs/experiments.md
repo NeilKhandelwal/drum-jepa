@@ -208,3 +208,46 @@ that is the question to put to Ziyu before E6.
 Caveats. One seed per model; the E4 decoder was trained for a fixed 8 epochs and
 raw_mel+a_t was still improving; E5 probes use frequency-pooled tokens by default;
 the AO-JEPA predictor has 3.2M rather than 4.8M parameters (no cross-attention).
+
+### Option A — action reconstruction regularizer (2026-09-06, drumjepa_v1_auxrec, docs/optionA/)
+Same as drumjepa_v1 plus a BCE term that reconstructs the current window's
+drumroll from the frequency-pooled state tokens, weight 1.0. Tests whether the
+state can keep action content without losing its prediction advantage.
+
+| test | drum-JEPA | option A | controls |
+|---|---|---|---|
+| E5 onset probe, linear, test, train kits | 0.223 | 0.625 [0.599, 0.646] | random 0.365, raw mel 0.583 |
+| E5 onset probe, linear, test, held-out kits | 0.188 | 0.484 [0.450, 0.498] | random 0.320, raw mel 0.277 |
+| E4 inverse model, onset F1, test, train kits | 0.118 | 0.464 [0.444, 0.481] | random 0.251, raw mel 0.250 |
+| E1 kit swap win rate | 0.993 | 0.935 | |
+| E1 random state win rate | 0.973 | 0.893 | |
+| E1 random action win rate | 0.993 | 0.996 | |
+| state prediction error / teacher variance | 0.080 | 0.210 | action-only 0.111 |
+
+Action content came back, and then some. The regularized state is the first
+representation to beat both controls on the content probes, on train kits and,
+by a wider margin, on held-out kits, where raw mel collapses (0.28) and option A
+holds 0.48. The inverse model nearly quadruples its onset F1.
+
+Prediction paid for it. Raw MSE is not comparable across models whose teachers
+have different spread (option A's embedding std is 1.89 vs 1.09), so the fair
+comparison is error divided by teacher variance: 0.21 against 0.08 for drum-JEPA
+and 0.11 for the action-only baseline. The E2 advantage over action-only is gone
+(win rate 0.005). E1 confirms the same shift scale-free: the model still tracks
+its actions (0.99) but leans on its state less (kit swap 0.99 to 0.94, random
+state 0.97 to 0.89).
+
+Verdict. At weight 1.0 there is a real tradeoff, not a free fix: the state can be
+made to carry action content, but the predictor then relies on it less and
+predicts worse. This is consistent with the E4/E5 mechanism read in reverse. The
+open question is the shape of the tradeoff curve; a sweep over the weight (0.1,
+0.3) with the normalized error and the E1 win rates as the prediction metrics is
+one run each. The weight-1.0 point also says something on its own: with the
+reconstruction term this strong, the reconstruction loss (0.06) dominates the
+state loss's gradient early in training, so the encoder is shaped by the
+regularizer first and the prediction task second.
+
+Protocol note. E2's cross-model error comparison silently assumed comparable
+teacher scales, which held for the original pair (std 1.09 vs 1.14) and does not
+hold here. Future cross-model comparisons should report error / teacher variance
+or win rates only.
