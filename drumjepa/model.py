@@ -24,6 +24,8 @@ DEFAULTS = dict(
     state_patch=(25, 15), n_mels_pad=240, action_patch_frames=25,
     use_state=True,  # False = E2 action-only baseline: f gets no s_t tokens
     use_action=True,  # False = E5 AO-JEPA baseline: no action encoder, no cross-attn, no g loss
+    aux_rec=0.0,      # >0 = option A regularizer: reconstruct a_t from s_t, weight of the BCE term
+    aux_pos_weight=50.0,
     mask_ratio=0.75, mask_blocks=4, mask_aspect=(0.75, 1.5), mask_scale=(0.15, 0.2),
     tau=0.95, lambda_a=0.5, dropout=0.0,
 )
@@ -214,6 +216,12 @@ class DrumJEPA(nn.Module):
         self.f = Predictor(cfg, self.n_s, sincos_2d(d, *self.grid), cross=self.use_action,
                            use_state=cfg["use_state"])
         self.g = Predictor(cfg, self.n_a, sincos_1d(d, torch.arange(self.n_a)), cross=False)
+        # Option A (notes/decisions.md): a head from the frequency-pooled s_t tokens to the
+        # same window's drumroll keeps action content in the state. Off unless aux_rec > 0.
+        self.aux_rec = cfg["aux_rec"]
+        pt = cfg["state_patch"][0]
+        self.rec_head = nn.Linear(d, pt * K_V1) if self.aux_rec > 0 else None
+        self.register_buffer("aux_pos_weight", torch.tensor(float(cfg["aux_pos_weight"])), persistent=False)
         self._last_masks = None
 
     # ---- encoders -------------------------------------------------------
@@ -319,9 +327,14 @@ class DrumJEPA(nn.Module):
         pred_s, s_tgt, s_t = self._state_branch(
             x_t, batch["a_t1"], batch["cc_t1"], x_t1, mask_s)
         loss_s = self._masked_mse(pred_s, s_tgt, mask_s)
+        if self.rec_head is not None:
+            loss_rec = self.reconstruction_loss(s_t, batch["a_t"])
+            loss_s_total = loss_s + self.aux_rec * loss_rec
+        else:
+            loss_rec, loss_s_total = loss_s.detach() * 0, loss_s
         if not self.use_action:  # AO-JEPA: state loss only, action monitors reported as 0
             z = loss_s.detach() * 0
-            return {"loss": loss_s, "loss_s": loss_s.detach(), "loss_a": z,
+            return {"loss": loss_s_total, "loss_s": loss_s.detach(), "loss_a": z, "loss_rec": loss_rec.detach(),
                     "s_tea_std": self._tok_std(s_tgt), "s_stu_std": self._tok_std(s_t),
                     "a_tea_std": z, "a_stu_std": z}
         a_t = self.encode_action(batch["a_t"], batch["cc_t"])
@@ -331,12 +344,24 @@ class DrumJEPA(nn.Module):
 
         loss_a = self._masked_mse(self.g(a_t, a_t1_vis, vis_a), a_tgt, mask_a)
         return {
-            "loss": loss_s + self.lambda_a * loss_a,
-            "loss_s": loss_s.detach(), "loss_a": loss_a.detach(),
+            "loss": loss_s_total + self.lambda_a * loss_a,
+            "loss_s": loss_s.detach(), "loss_a": loss_a.detach(), "loss_rec": loss_rec.detach(),
             # Student monitors use the full t-side encodings, so they cover all tokens.
             "s_tea_std": self._tok_std(s_tgt), "s_stu_std": self._tok_std(s_t),
             "a_tea_std": self._tok_std(a_tgt), "a_stu_std": self._tok_std(a_t),
         }
+
+    def reconstruction_loss(self, s_t, a_t):
+        """BCE between onsets decoded from s_t and the same window's drumroll a_t.
+
+        s_t tokens (B, 8*16, d) are mean-pooled over frequency to (B, 8, d); the head
+        emits a 25x14 onset-logit map per 250 ms step, i.e. a (B, 200, 14) drumroll.
+        """
+        B, d = s_t.size(0), s_t.size(-1)
+        steps = s_t.view(B, self.grid[0], self.grid[1], d).mean(2)
+        logits = self.rec_head(steps).view(B, -1, K_V1).float()
+        target = (a_t > 0).float()
+        return F.binary_cross_entropy_with_logits(logits, target, pos_weight=self.aux_pos_weight)
 
     # ---- EMA ------------------------------------------------------------
     @torch.no_grad()

@@ -28,7 +28,7 @@ def make(device="cpu", cfg=None):
     return model, batch
 
 
-KEYS = ["loss", "loss_s", "loss_a", "s_tea_std", "s_stu_std", "a_tea_std", "a_stu_std"]
+KEYS = ["loss", "loss_s", "loss_a", "loss_rec", "s_tea_std", "s_stu_std", "a_tea_std", "a_stu_std"]
 
 
 @pytest.mark.parametrize("device", DEVICES)
@@ -158,3 +158,15 @@ def test_audio_only_ignores_actions():
     out = m(b)
     assert out["loss_a"].item() == 0.0 and torch.isfinite(out["loss"])
     assert "Ea" not in m.n_params() and m.n_params()["total_student"] > 0
+
+
+def test_aux_reconstruction_head():
+    """aux_rec > 0 (option A): loss_rec is finite, trains the state encoder, and is 0 when off."""
+    m, b = make(cfg={"aux_rec": 1.0})
+    out = m(b)
+    assert torch.isfinite(out["loss_rec"]) and out["loss_rec"].item() > 0
+    out["loss"].backward()
+    assert m.rec_head.weight.grad is not None
+    assert any(p.grad is not None for p in m.Es_stu.parameters())
+    m0, b0 = make()
+    assert m0(b0)["loss_rec"].item() == 0.0 and m0.rec_head is None

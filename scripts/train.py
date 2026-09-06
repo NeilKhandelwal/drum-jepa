@@ -33,7 +33,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from drumjepa.dataset import SegmentPairs  # noqa: E402
 from drumjepa.model import DrumJEPA  # noqa: E402
 
-MON = ("loss", "loss_s", "loss_a", "s_tea_std", "s_stu_std", "a_tea_std", "a_stu_std")
+MON = ("loss", "loss_s", "loss_a", "loss_rec", "s_tea_std", "s_stu_std", "a_tea_std", "a_stu_std")
 FIELDS = (["epoch", "step"] + [f"train/{k}" for k in MON]
           + ["val/loss", "val/loss_s", "val/loss_a", "val/s_tea_std", "lr", "epoch_s"])
 
@@ -170,7 +170,7 @@ def main():
                 sums[k] += out[k].item()
             if args.log_every and step % args.log_every == 0:
                 print(f"  step={step} " + " ".join(f"{k}={sums[k]/n:.4g}" for k in
-                                                   ("loss", "loss_s", "loss_a", "s_tea_std", "a_tea_std"))
+                                                   ("loss", "loss_s", "loss_a", "loss_rec", "s_tea_std", "a_tea_std"))
                       + f" lr={opt.param_groups[0]['lr']:.3g}", flush=True)
             if args.max_steps and step >= args.max_steps:
                 break

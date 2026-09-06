@@ -86,3 +86,15 @@ problem, not a harder one. If AO-JEPA's state loss ends lower than drum-JEPA's t
 is expected (it predicts without a conditioning signal it has to learn to use), and
 says nothing about representation quality. Only the probes and the E3 geometry
 decide E5.
+
+## Option A: action reconstruction regularizer (2026-09-06)
+`aux_rec: 1.0` adds BCE(rec_head(pool_freq(s_t)), a_t > 0) to the loss, pos_weight 50,
+everything else identical to drumjepa_v1. Tests whether the state can hold action
+content without losing its prediction advantage (E4/E5 found drum-JEPA's state
+carries less action content than an untrained encoder).
+
+Success: E5 linear onset probe rises from 0.22 to at least the untrained encoder's
+0.37, and the E2 clean win rate over the action-only baseline stays near 0.78.
+Watch for: the head reads frequency-pooled tokens, so it can only push content into
+the pooled subspace; if the probe does not move, try the un-pooled head before
+raising the coefficient.
