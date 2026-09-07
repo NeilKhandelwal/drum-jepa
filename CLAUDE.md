@@ -155,8 +155,12 @@ Option A tested 2026-09-06 (drumjepa_v1_auxrec, aux_rec 1.0; docs/optionA/): act
 content restored and beats both controls (E5 0.63 vs 0.22; E4 0.46 vs 0.12; held-out
 0.48 vs raw mel 0.28) BUT prediction degrades (normalized error 0.21 vs 0.08; E2
 advantage over action-only gone; E1 kit swap 0.99 -> 0.94). A tradeoff at this
-weight. Next: aux_rec sweep 0.1 / 0.3 with normalized error + E1 as the prediction
-metrics; then talk to Ziyu.
+weight.
+Sweep done 2026-09-06 (docs/optionA/sweep/): aux_rec 0.1 is the sweet spot: E5 onset
+0.58 train / 0.40 held-out (raw mel 0.58 / 0.28, random 0.37 / 0.32) AND normalized
+prediction error 0.038 vs 0.081 unregularized, E1 state win rates up. 0.3 and 1.0
+keep the content but prediction error jumps 5x. One seed each. Next: 3 seeds at
+aux_rec 0 and 0.1 (the headline), then email Ziyu with the sweep table.
 Next:
 1. (done) Fill configs/kits_v1.yaml, commit, push.
 2. Warm-up: warmup/lejepa_inet10.py (LeJEPA minimal, ViT-S/8, Imagenette,

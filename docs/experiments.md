@@ -251,3 +251,42 @@ Protocol note. E2's cross-model error comparison silently assumed comparable
 teacher scales, which held for the original pair (std 1.09 vs 1.14) and does not
 hold here. Future cross-model comparisons should report error / teacher variance
 or win rates only.
+
+### Option A sweep — aux_rec 0.1 and 0.3 (2026-09-06, docs/optionA/sweep/)
+Same recipe as drumjepa_v1 with the action-reconstruction term at four weights.
+Prediction is compared scale-free: error divided by the teacher's mean per-dim
+variance, and the E1 within-model win rates. E5 is the linear onset probe on the
+test split. One seed per point.
+
+| aux_rec | teacher std | state error / teacher var | E2 win vs action-only | E1 random state | E1 kit swap | E5 onset, train kits | E5 onset, held-out kits |
+|---|---|---|---|---|---|---|---|
+| 0 (drumjepa_v1) | 1.09 | 0.081 | 0.77 | 0.973 | 0.993 | 0.223 | 0.188 |
+| 0.1 | 1.33 | 0.038 | 0.93 | 0.990 | 0.997 | 0.582 | 0.396 |
+| 0.3 | 1.53 | 0.191 | 0.01 | 0.993 | 0.997 | 0.663 | 0.494 |
+| 1.0 | 1.89 | 0.210 | 0.005 | 0.893 | 0.935 | 0.625 | 0.484 |
+| controls | | action-only 0.111 | | | | random 0.365, raw mel 0.583 | random 0.320, raw mel 0.277 |
+
+Verdict. Weight 0.1 is the point that matters. It restores action content to the
+level of the raw spectrogram on train kits (0.58) and above every control on
+held-out kits (0.40), and at the same time halves the normalized prediction
+error relative to the unregularized model (0.038 vs 0.081) and raises the E1
+state-side win rates. On this evidence a small reconstruction term is not a
+tradeoff at all: it is a better drum-JEPA on every measure run so far.
+
+Between 0.1 and 0.3 the prediction error jumps five-fold while the E1 win rates
+stay at their ceiling, so the predictor still uses its state well but the target
+has become harder to hit: the encoder is spreading variance along action-content
+directions that the masked-token predictor cannot reproduce exactly. Content
+keeps rising to 0.66 at 0.3 and then falls back at 1.0 as the regularizer starts
+to dominate the encoder.
+
+What is not established. Whether the 0.1 improvement in prediction is real or a
+seed effect; the step between 0.1 and 0.3 is one run each, so its sharpness is
+unknown; and E4 was not rerun on the sweep. The next spend is three seeds at 0
+and 0.1, which settles the headline, and one point at 0.2 if the curve's shape
+matters.
+
+Reading across the whole project: the action-conditioned JEPA sheds action
+content because nothing asks the state to keep it (E4, E5), and a weak
+reconstruction term puts it back at no measured cost to the world model. That is
+the method result, and it is one sentence.
