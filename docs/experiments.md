@@ -290,3 +290,35 @@ Reading across the whole project: the action-conditioned JEPA sheds action
 content because nothing asks the state to keep it (E4, E5), and a weak
 reconstruction term puts it back at no measured cost to the world model. That is
 the method result, and it is one sentence.
+
+### Seeds — aux_rec 0 vs 0.1, three seeds each (2026-09-07, docs/optionA/seeds/)
+Seeds 0, 1, 2 at each weight, identical recipe otherwise. Per-seed values, then
+the range. Normalized error = E2 clean error / squared final teacher std.
+
+| metric | aux_rec 0, seeds 0 / 1 / 2 | aux_rec 0.1, seeds 0 / 1 / 2 | separated? |
+|---|---|---|---|
+| normalized state error | 0.077 / 0.077 / 0.105 | 0.038 / 0.026 / 0.033 | yes, max 0.038 < min 0.077 |
+| E2 win rate vs action-only | 0.77 / 0.92 / 0.64 | 0.93 / 0.98 / 0.94 | yes |
+| E1 random-state win rate | 0.973 / 0.980 / 0.979 | 0.990 / 0.991 / 0.990 | yes |
+| E1 kit-swap win rate | 0.993 / 0.995 / 0.994 | 0.997 / 0.995 / 0.997 | overlap |
+| E5 onset probe, train kits | 0.223 / 0.265 / 0.263 | 0.582 / 0.618 / 0.664 | yes, min 0.58 > max 0.27 |
+| E5 onset probe, held-out kits | 0.188 / 0.208 / 0.209 | 0.396 / 0.253 / 0.304 | yes, min 0.25 > max 0.21 |
+
+Mean over seeds: normalized error 0.087 vs 0.032; onset probe 0.250 vs 0.621 on
+train kits, 0.202 vs 0.318 on held-out kits.
+
+Verdict. Every seed at weight 0.1 beats every seed at weight 0 on prediction
+error, on the E2 and E1 state-side win rates, and on action content, with no
+overlap between the two groups of three. The headline stands: a weak
+action-reconstruction term restores action content to the state and improves
+the world model's prediction at the same time. Kit-swap sensitivity is at
+ceiling for both and does not separate.
+
+Seed variance is worth knowing. The E2 win rate against the action-only model
+swings from 0.64 to 0.92 across baseline seeds while the normalized error moves
+only 0.077 to 0.105, so the win rate is the noisier statistic and normalized
+error is the one to quote. Held-out content at 0.1 ranges 0.25 to 0.40; the
+direction is safe, the magnitude is not.
+
+This closes the option A question. Claims that remain single-seed: the 0.3 and
+1.0 points of the sweep, the AO-JEPA comparison, and everything in E3 and E4.

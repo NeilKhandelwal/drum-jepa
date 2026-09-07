@@ -1,0 +1,97 @@
+{
+ "run_dir": "runs/drumjepa_v1_auxrec01_s2",
+ "split": "validation",
+ "epoch": 19,
+ "step": 12400,
+ "n_transitions": 12204,
+ "K": 4,
+ "full_mask": false,
+ "seed": 0,
+ "n_bootstrap": 1000,
+ "git_commit": "b4ec1239c060701110d3a4140fce69f4bf1d034f",
+ "perturbations": {
+  "state_shift": {
+   "n": 11880,
+   "win_rate": 0.5805555555555556,
+   "ci": [
+    0.5433557506148354,
+    0.6168782998769967
+   ],
+   "clean_err": 0.058486975729465485,
+   "perturbed_err": 0.06627277284860611
+  },
+  "state_random": {
+   "n": 12204,
+   "win_rate": 0.9902490986561783,
+   "ci": [
+    0.9868515922506799,
+    0.9934978488339026
+   ],
+   "clean_err": 0.06216743215918541,
+   "perturbed_err": 2.5404155254364014
+  },
+  "action_shift": {
+   "n": 12204,
+   "win_rate": 0.9872992461488037,
+   "ci": [
+    0.9725009075109159,
+    0.9969022757014395
+   ],
+   "clean_err": 0.06216743215918541,
+   "perturbed_err": 0.10696680098772049
+  },
+  "action_random": {
+   "n": 12204,
+   "win_rate": 0.9977056702720419,
+   "ci": [
+    0.9958350909008804,
+    0.9991171433381911
+   ],
+   "clean_err": 0.06216743215918541,
+   "perturbed_err": 0.18254436552524567
+  },
+  "kit_swap": {
+   "n": 12204,
+   "win_rate": 0.9972140281874795,
+   "ci": [
+    0.9945710753183531,
+    0.9992195994843885
+   ],
+   "clean_err": 0.06216743215918541,
+   "perturbed_err": 3.0125203132629395
+  }
+ },
+ "skipped": {
+  "state_shift": 324,
+  "state_random": 0,
+  "action_shift": 0,
+  "action_random": 0,
+  "kit_swap": 0
+ },
+ "kit_swap_by_kit": {
+  "Jazz": {
+   "n": 2034,
+   "win_rate": 0.9970501474926253
+  },
+  "60s Rock": {
+   "n": 2034,
+   "win_rate": 0.9975417895771878
+  },
+  "Studio (Live Room)": {
+   "n": 2034,
+   "win_rate": 0.995575221238938
+  },
+  "Cassette (Lo-Fi Compress)": {
+   "n": 2034,
+   "win_rate": 0.9985250737463127
+  },
+  "Ele-Drum": {
+   "n": 2034,
+   "win_rate": 0.9960668633235005
+  },
+  "808 Simple": {
+   "n": 2034,
+   "win_rate": 0.9985250737463127
+  }
+ }
+}

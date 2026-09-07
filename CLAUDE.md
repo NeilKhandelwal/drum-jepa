@@ -159,8 +159,12 @@ weight.
 Sweep done 2026-09-06 (docs/optionA/sweep/): aux_rec 0.1 is the sweet spot: E5 onset
 0.58 train / 0.40 held-out (raw mel 0.58 / 0.28, random 0.37 / 0.32) AND normalized
 prediction error 0.038 vs 0.081 unregularized, E1 state win rates up. 0.3 and 1.0
-keep the content but prediction error jumps 5x. One seed each. Next: 3 seeds at
-aux_rec 0 and 0.1 (the headline), then email Ziyu with the sweep table.
+keep the content but prediction error jumps 5x.
+Seeds done 2026-09-07 (docs/optionA/seeds/): 3 seeds each at aux_rec 0 and 0.1. No
+overlap on normalized error (0.077-0.105 vs 0.026-0.038), E5 onset train (0.22-0.27
+vs 0.58-0.66) or held-out (0.19-0.21 vs 0.25-0.40), E1 random state, E2 win rate.
+The option A headline is seed-robust. Still single-seed: sweep points 0.3/1.0,
+AO-JEPA, E3, E4. Next: email Ziyu (draft exists) with E1 figure + seeds table.
 Next:
 1. (done) Fill configs/kits_v1.yaml, commit, push.
 2. Warm-up: warmup/lejepa_inet10.py (LeJEPA minimal, ViT-S/8, Imagenette,

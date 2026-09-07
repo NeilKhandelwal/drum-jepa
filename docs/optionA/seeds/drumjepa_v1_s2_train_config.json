@@ -1,0 +1,67 @@
+{
+ "config": {
+  "run": {
+   "name": "drumjepa_v1_s2",
+   "seed": 2
+  },
+  "data": {
+   "cache_dir": "data/cache/v1",
+   "split_version": "v1",
+   "MAP_VERSION": "v1",
+   "train_kits": [
+    "Jazz",
+    "60s Rock",
+    "Studio (Live Room)",
+    "Cassette (Lo-Fi Compress)",
+    "Ele-Drum",
+    "808 Simple"
+   ],
+   "seg_hop": 200,
+   "workers": 4,
+   "val_pairs": 2048
+  },
+  "model": {},
+  "optim": {
+   "optimizer": "adamw",
+   "lr": 0.0006,
+   "weight_decay": 0.0001,
+   "betas": [
+    0.9,
+    0.95
+   ],
+   "batch_size": 128,
+   "epochs": 20,
+   "warmup_steps": 500,
+   "min_lr_factor": 0.1,
+   "grad_clip": 1.0
+  },
+  "amp": true
+ },
+ "args": {
+  "config": "configs/drumjepa_v1_s2.yaml",
+  "run_dir": "runs/drumjepa_v1_s2",
+  "epochs": null,
+  "max_steps": 0,
+  "overfit": 0,
+  "resume": false,
+  "no_amp": false,
+  "device": null,
+  "workers": null,
+  "log_every": 50
+ },
+ "MAP_VERSION": "v1",
+ "split_version": "v1",
+ "mel_mean": -5.198367118835449,
+ "mel_std": 3.4235610961914062,
+ "n_params": {
+  "Es": 6422016,
+  "f": 4814848,
+  "Ea": 4313856,
+  "g": 3229696,
+  "total_student": 18780416
+ },
+ "device": "mps",
+ "amp_bf16": true,
+ "torch": "2.14.0",
+ "git_commit": "b4ec1239c060701110d3a4140fce69f4bf1d034f"
+}
