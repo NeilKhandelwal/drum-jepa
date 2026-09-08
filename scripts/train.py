@@ -6,7 +6,9 @@
 
 Writes to the run directory: config.json (resolved config, normalization stats,
 parameter counts, git commit), metrics.csv (one row per epoch) and last.pt
-(model, optimizer, scheduler, epoch, step, RNG state) saved every epoch.
+(model, optimizer, scheduler, epoch, step, RNG state) saved every epoch. Epochs
+listed in `run.keep_epochs` are also copied to epoch<N>.pt, so a mid-run snapshot
+survives the next epoch's overwrite of last.pt.
 
 The overfit mode is the wiring test from CLAUDE.md step 5: on a few dozen fixed
 segments the loss must go toward ~0. Watch the *_std columns in either mode --
@@ -17,6 +19,7 @@ import csv
 import json
 import os
 import random
+import shutil
 import subprocess
 import sys
 import time
@@ -197,6 +200,8 @@ def main():
                     "epoch": epoch, "step": step, "config": cfg, "args": vars(args),
                     "rng": {"torch": torch.get_rng_state(), "numpy": np.random.get_state(),
                             "random": random.getstate(), "loader": g.get_state()}}, ckpt_path)
+        if epoch in cfg["run"].get("keep_epochs", []):
+            shutil.copyfile(ckpt_path, os.path.join(run_dir, f"epoch{epoch}.pt"))
         if args.max_steps and step >= args.max_steps:
             break
 

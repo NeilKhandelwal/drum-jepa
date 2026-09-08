@@ -24,7 +24,8 @@ DEFAULTS = dict(
     state_patch=(25, 15), n_mels_pad=240, action_patch_frames=25,
     use_state=True,  # False = E2 action-only baseline: f gets no s_t tokens
     use_action=True,  # False = E5 AO-JEPA baseline: no action encoder, no cross-attn, no g loss
-    aux_rec=0.0,      # >0 = option A regularizer: reconstruct a_t from s_t, weight of the BCE term
+    aux_rec=0.0,      # >0 = option A regularizer: reconstruct a_t from s_t, weight of the aux term
+    aux_target="action",  # "action" = drumroll onsets, BCE; "mel" = the window's log-mel, MSE (control)
     aux_pos_weight=50.0,
     mask_ratio=0.75, mask_blocks=4, mask_aspect=(0.75, 1.5), mask_scale=(0.15, 0.2),
     tau=0.95, lambda_a=0.5, dropout=0.0,
@@ -218,9 +219,14 @@ class DrumJEPA(nn.Module):
         self.g = Predictor(cfg, self.n_a, sincos_1d(d, torch.arange(self.n_a)), cross=False)
         # Option A (notes/decisions.md): a head from the frequency-pooled s_t tokens to the
         # same window's drumroll keeps action content in the state. Off unless aux_rec > 0.
+        # aux_target "mel" swaps the drumroll for the window's own log-mel: same head shape
+        # family, no action content, the control for "any weak regularizer helps".
         self.aux_rec = cfg["aux_rec"]
+        self.aux_target = cfg["aux_target"]
+        assert self.aux_target in ("action", "mel"), f"aux_target: {self.aux_target!r}"
         pt = cfg["state_patch"][0]
-        self.rec_head = nn.Linear(d, pt * K_V1) if self.aux_rec > 0 else None
+        n_rec = pt * K_V1 if self.aux_target == "action" else N_MELS
+        self.rec_head = nn.Linear(d, n_rec) if self.aux_rec > 0 else None
         self.register_buffer("aux_pos_weight", torch.tensor(float(cfg["aux_pos_weight"])), persistent=False)
         self._last_masks = None
 
@@ -328,7 +334,7 @@ class DrumJEPA(nn.Module):
             x_t, batch["a_t1"], batch["cc_t1"], x_t1, mask_s)
         loss_s = self._masked_mse(pred_s, s_tgt, mask_s)
         if self.rec_head is not None:
-            loss_rec = self.reconstruction_loss(s_t, batch["a_t"])
+            loss_rec = self.reconstruction_loss(s_t, batch)
             loss_s_total = loss_s + self.aux_rec * loss_rec
         else:
             loss_rec, loss_s_total = loss_s.detach() * 0, loss_s
@@ -351,17 +357,24 @@ class DrumJEPA(nn.Module):
             "a_tea_std": self._tok_std(a_tgt), "a_stu_std": self._tok_std(a_t),
         }
 
-    def reconstruction_loss(self, s_t, a_t):
-        """BCE between onsets decoded from s_t and the same window's drumroll a_t.
+    def reconstruction_loss(self, s_t, batch):
+        """Aux loss from s_t to a target on the same window; target set by aux_target.
 
-        s_t tokens (B, 8*16, d) are mean-pooled over frequency to (B, 8, d); the head
-        emits a 25x14 onset-logit map per 250 ms step, i.e. a (B, 200, 14) drumroll.
+        s_t tokens (B, 8*16, d) are mean-pooled over frequency to (B, 8, d). With
+        "action" the head emits a 25x14 onset-logit map per 250 ms step, i.e. a
+        (B, 200, 14) drumroll, scored by BCE against a_t > 0. With "mel" it emits the
+        229 un-padded normalized log-mel bins of the step, averaged over its 25 frames,
+        scored by MSE: the same head shape family with no action content in the target.
         """
         B, d = s_t.size(0), s_t.size(-1)
         steps = s_t.view(B, self.grid[0], self.grid[1], d).mean(2)
-        logits = self.rec_head(steps).view(B, -1, K_V1).float()
-        target = (a_t > 0).float()
-        return F.binary_cross_entropy_with_logits(logits, target, pos_weight=self.aux_pos_weight)
+        out = self.rec_head(steps).float()
+        if self.aux_target == "mel":
+            target = batch["x_t"].view(B, self.grid[0], -1, N_MELS).mean(2).float()
+            return F.mse_loss(out, target)
+        target = (batch["a_t"] > 0).float()
+        return F.binary_cross_entropy_with_logits(out.view(B, -1, K_V1), target,
+                                                  pos_weight=self.aux_pos_weight)
 
     # ---- EMA ------------------------------------------------------------
     @torch.no_grad()

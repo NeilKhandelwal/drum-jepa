@@ -104,3 +104,28 @@ MSE in a model's own teacher space scales with that teacher's embedding spread.
 E2's full-vs-action-only comparison was fair only because both teachers had
 std ~1.1. Option A's teacher has std 1.89. Report error / mean per-dim teacher
 variance, or within-model win rates (E1), whenever comparing across models.
+
+## Control auxiliary target (2026-09-07)
+`aux_target: mel` (configs/drumjepa_v1_melrec.yaml) keeps option A's head and weight
+and swaps only its target: the same frequency-pooled s_t step vectors now predict the
+window's own normalized log-mel, averaged over each step's 25 frames, under MSE.
+The 229 un-padded bins are used, not the 240 padded ones: the padding exists for the
+patch grid, and the un-padded target needs no reshaping of the batch. This is
+docs/followups.md item 2, the control that separates "action content in the state
+helps" from "any weak auxiliary term helps".
+
+Weight: the action term is BCE with pos_weight 50 and the mel term is an MSE, so the
+same coefficient is not automatically the same nudge. Measured at initialization over
+8 real training batches with the seed-0 init: action BCE 0.967 (std 0.006 across
+batches), mel MSE 0.914 (std 0.022). They are within 6%, which is close to the
+batch-to-batch spread, so the weight stays 0.1 rather than the exactly matched 0.106,
+and the control differs from drumjepa_v1_auxrec01 in the target alone. For reference,
+drumjepa_v1_auxrec01's recorded loss_rec is 0.921 at step 50 and 0.570 averaged over
+epoch 0 (runs/drumjepa_v1_auxrec01/metrics.csv).
+
+Watch for: matched at initialization is not matched throughout. The BCE term falls
+fast once the head learns the onset prior, and a mel term that stays near 0.9 while
+the action term reaches 0.5 is a stronger pull late in training, not an equal one.
+Compare the two runs' loss_rec curves before reading the result; if they diverge by
+more than a factor of two, the control is at a different effective weight and a
+rerun at a rescaled weight decides it.

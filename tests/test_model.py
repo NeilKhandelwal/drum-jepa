@@ -170,3 +170,22 @@ def test_aux_reconstruction_head():
     assert any(p.grad is not None for p in m.Es_stu.parameters())
     m0, b0 = make()
     assert m0(b0)["loss_rec"].item() == 0.0 and m0.rec_head is None
+
+
+def test_aux_mel_target_control():
+    """aux_target 'mel' is the control for option A: same head, target carries no action.
+
+    If the mel loss moved with a_t the control would not isolate action content, which
+    is the only reason the run exists (docs/followups.md item 2).
+    """
+    m, b = make(cfg={"aux_rec": 1.0, "aux_target": "mel"})
+    assert m.rec_head.out_features == N_MELS
+    steps = m.encode_state(b["x_t"]).view(B, m.grid[0], m.grid[1], -1).mean(2)
+    assert m.rec_head(steps).shape == (B, 8, N_MELS)
+    out = m(b)
+    assert torch.isfinite(out["loss_rec"]) and out["loss_rec"].item() > 0
+    silent = m({**b, "a_t": torch.zeros_like(b["a_t"])})
+    assert silent["loss_rec"].item() == pytest.approx(out["loss_rec"].item())
+    out["loss"].backward()
+    assert m.rec_head.weight.grad is not None
+    assert any(p.grad is not None and p.grad.abs().sum() > 0 for p in m.Es_stu.parameters())

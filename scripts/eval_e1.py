@@ -147,7 +147,8 @@ def write_outputs(out_dir, res, run_name):
     rows += ["", "kit_swap by the kit of the clean x_t:", "",
              "| kit | n | win rate |", "|---|---|---|"]
     rows += [f"| {k} | {v['n']} | {v['win_rate']:.3f} |" for k, v in res["kit_swap_by_kit"].items()]
-    md = (f"# E1 dynamics sanity — {run_name} (epoch {res['epoch']}, {res['split']})\n\n"
+    md = (f"# E1 dynamics sanity — {run_name} (epoch {res['epoch']}, {res['split']}, "
+          f"{res['kits']} kits)\n\n"
           f"{res['n_transitions']} transitions, K={res['K']}"
           f"{' (full mask)' if res['full_mask'] else ''}, seed {res['seed']}.\n\n"
           + "\n".join(rows) + "\n")
@@ -176,6 +177,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--run-dir", default="runs/drumjepa_v1")
     ap.add_argument("--split", default="validation", choices=["validation", "test"])
+    ap.add_argument("--kits", default="train", choices=["train", "heldout", "all"],
+                    help="kit subset to evaluate on; heldout/all write to <run-dir>/e1_<kits>")
     ap.add_argument("--max-pairs", type=int, default=0, help="0 = all transitions")
     ap.add_argument("--K", type=int, default=4, help="masks averaged per transition")
     ap.add_argument("--full-mask", action="store_true", help="one all-masked mask instead")
@@ -191,10 +194,18 @@ def main():
     dev = pick_device(args.device)
     amp = bool(cfg["config"]["amp"]) and dev.type != "cpu"
 
+    # Kit subset. The cache holds all 14 kits of configs/kits_v1.yaml; a run trains on 6.
+    # Held-out kits are the cache's kits minus the run's train kits, as in eval_e3.py.
+    # Every perturbation source, kit swap included, is drawn from this subset.
+    all_kits = json.load(open(os.path.join(dcfg["cache_dir"], args.split, "meta.json")))["kits"]
+    kit_subset = {"train": list(dcfg["train_kits"]),
+                  "heldout": [k for k in all_kits if k not in dcfg["train_kits"]],
+                  "all": list(all_kits)}[args.kits]
+
     # Normalization comes from the run config, never from the cache's stats.json
     # (notes/decisions.md: a rebuilt cache changes stats.json silently).
     ds = SegmentPairs(dcfg["cache_dir"], args.split, seg_hop=dcfg["seg_hop"],
-                      kits=dcfg["train_kits"], mel_mean=cfg["mel_mean"], mel_std=cfg["mel_std"])
+                      kits=kit_subset, mel_mean=cfg["mel_mean"], mel_std=cfg["mel_std"])
     for key in ("MAP_VERSION", "split_version"):
         assert ds.meta[key] == dcfg[key], f"{key}: cache {ds.meta[key]} != run {dcfg[key]}"
 
@@ -238,6 +249,7 @@ def main():
     kits = ds.meta["kits"]
 
     res = {"run_dir": args.run_dir, "split": args.split, "epoch": ck["epoch"], "step": ck["step"],
+           "kits": args.kits, "kit_names": kit_subset,
            "n_transitions": int(len(tidx)), "K": K, "full_mask": args.full_mask,
            "seed": args.seed, "n_bootstrap": 1000, "git_commit": git_commit(),
            "perturbations": {}, "skipped": {}, "kit_swap_by_kit": {}}
@@ -255,7 +267,7 @@ def main():
         win = errs["clean"][sel] < errs["kit_swap"][sel]
         res["kit_swap_by_kit"][kits[int(k)]] = {"n": int(sel.sum()), "win_rate": float(win.mean())}
 
-    out_dir = os.path.join(args.run_dir, "e1")
+    out_dir = os.path.join(args.run_dir, "e1" if args.kits == "train" else f"e1_{args.kits}")
     os.makedirs(out_dir, exist_ok=True)
     print(write_outputs(out_dir, res, cfg["config"]["run"]["name"]))
     print("skipped (perturbation unavailable): " + json.dumps(res["skipped"]))
