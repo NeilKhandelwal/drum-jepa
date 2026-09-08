@@ -165,6 +165,12 @@ overlap on normalized error (0.077-0.105 vs 0.026-0.038), E5 onset train (0.22-0
 vs 0.58-0.66) or held-out (0.19-0.21 vs 0.25-0.40), E1 random state, E2 win rate.
 The option A headline is seed-robust. Still single-seed: sweep points 0.3/1.0,
 AO-JEPA, E3, E4. Next: email Ziyu (draft exists) with E1 figure + seeds table.
+Follow-ups done 2026-09-07 (docs/followups.md): E4 on 0.1 passes all seeds; 40-epoch
+baseline does not close the gap and sheds more content; held-out swap improves across
+seeds but held-out E1 kit swap is identical; fixed-readout eval saturates under the
+training mask, use the full-mask ratio (0.92-1.00 vs 0.80-0.88); mel-reconstruction
+control halves normalized error but not the ratio. Error / teacher variance is retired
+for cross-model claims. Mel-control seeds 1 and 2 pending (chain2). Next: email Ziyu.
 Next:
 1. (done) Fill configs/kits_v1.yaml, commit, push.
 2. Warm-up: warmup/lejepa_inet10.py (LeJEPA minimal, ViT-S/8, Imagenette,

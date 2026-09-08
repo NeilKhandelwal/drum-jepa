@@ -1,0 +1,106 @@
+{
+ "run_dir": "runs/drumjepa_v1_e40",
+ "split": "validation",
+ "epoch": 39,
+ "step": 24800,
+ "kits": "train",
+ "kit_names": [
+  "Jazz",
+  "60s Rock",
+  "Studio (Live Room)",
+  "Cassette (Lo-Fi Compress)",
+  "Ele-Drum",
+  "808 Simple"
+ ],
+ "n_transitions": 12204,
+ "K": 4,
+ "full_mask": false,
+ "seed": 0,
+ "n_bootstrap": 1000,
+ "git_commit": "41d1d5ddd4c55212b331d8111f4478f6f46fca6a",
+ "perturbations": {
+  "state_shift": {
+   "n": 11880,
+   "win_rate": 0.5464646464646464,
+   "ci": [
+    0.5173772074774764,
+    0.5739100384176808
+   ],
+   "clean_err": 0.0971926674246788,
+   "perturbed_err": 0.09742021560668945
+  },
+  "state_random": {
+   "n": 12204,
+   "win_rate": 0.9460013110455588,
+   "ci": [
+    0.9416009427629972,
+    0.9509585024087359
+   ],
+   "clean_err": 0.09723526239395142,
+   "perturbed_err": 0.23319178819656372
+  },
+  "action_shift": {
+   "n": 12204,
+   "win_rate": 0.9614880367092756,
+   "ci": [
+    0.9437591264710108,
+    0.9779348625676141
+   ],
+   "clean_err": 0.09723526239395142,
+   "perturbed_err": 0.1537114828824997
+  },
+  "action_random": {
+   "n": 12204,
+   "win_rate": 0.984267453294002,
+   "ci": [
+    0.9789768684176677,
+    0.9892631546952001
+   ],
+   "clean_err": 0.09723526239395142,
+   "perturbed_err": 0.18333494663238525
+  },
+  "kit_swap": {
+   "n": 12204,
+   "win_rate": 0.9882825303179286,
+   "ci": [
+    0.985207567788788,
+    0.991018422329263
+   ],
+   "clean_err": 0.09723526239395142,
+   "perturbed_err": 0.26476404070854187
+  }
+ },
+ "skipped": {
+  "state_shift": 324,
+  "state_random": 0,
+  "action_shift": 0,
+  "action_random": 0,
+  "kit_swap": 0
+ },
+ "kit_swap_by_kit": {
+  "Jazz": {
+   "n": 2034,
+   "win_rate": 0.9926253687315634
+  },
+  "60s Rock": {
+   "n": 2034,
+   "win_rate": 0.9945919370698132
+  },
+  "Studio (Live Room)": {
+   "n": 2034,
+   "win_rate": 0.9911504424778761
+  },
+  "Cassette (Lo-Fi Compress)": {
+   "n": 2034,
+   "win_rate": 0.9739429695181907
+  },
+  "Ele-Drum": {
+   "n": 2034,
+   "win_rate": 0.9960668633235005
+  },
+  "808 Simple": {
+   "n": 2034,
+   "win_rate": 0.9813176007866273
+  }
+ }
+}

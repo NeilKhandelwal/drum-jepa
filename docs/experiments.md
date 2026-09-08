@@ -322,3 +322,20 @@ direction is safe, the magnitude is not.
 
 This closes the option A question. Claims that remain single-seed: the 0.3 and
 1.0 points of the sweep, the AO-JEPA comparison, and everything in E3 and E4.
+
+### Follow-ups (2026-09-07, docs/followups.md, docs/followups/item1-5.md)
+Five checks on the option A headline. E4 on the 0.1 model passes on every seed
+(inverse-model onset F1 0.39-0.44 against controls at 0.25). A 40-epoch baseline
+does not close the gap on any measure and sheds more action content than the
+20-epoch one. The held-out predictor swap improves across three seeds (0.92-0.96
+against 0.89), but E1 kit-swap sensitivity on unseen kits is identical for both
+weights. A fixed-readout eval shows that under the training mask the predicted
+grid scores at its ceiling for every model, so the scale-free prediction number
+is the full-mask readout ratio: 0.92-1.00 for aux_rec 0.1 against 0.80-0.88 for
+aux_rec 0. A mel-reconstruction control halves the normalized error but does not
+move that ratio, and both regularized models enter a regime where error / teacher
+variance rewards spread rather than prediction. Consequences: error / teacher
+variance is retired for cross-model claims; the content gain is action-specific
+on unseen kits only; the prediction gain is specific to the action target on the
+readout ratio, pending mel-control seeds.
+

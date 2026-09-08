@@ -1,0 +1,116 @@
+{
+ "run_dir": "runs/drumjepa_v1",
+ "split": "validation",
+ "epoch": 19,
+ "step": 12400,
+ "kits": "heldout",
+ "kit_names": [
+  "Acoustic Kit",
+  "Unplugged",
+  "Bigga Bop (Jazz)",
+  "Heavy Metal",
+  "Pop-Rock (Studio)",
+  "Raw Dnb (Layered Hybrid)",
+  "909 Simple",
+  "Deep Daft"
+ ],
+ "n_transitions": 16272,
+ "K": 4,
+ "full_mask": false,
+ "seed": 0,
+ "n_bootstrap": 1000,
+ "git_commit": "41d1d5ddd4c55212b331d8111f4478f6f46fca6a",
+ "perturbations": {
+  "state_shift": {
+   "n": 15840,
+   "win_rate": 0.5226010101010101,
+   "ci": [
+    0.5039254805782333,
+    0.5419254328167414
+   ],
+   "clean_err": 0.2812165319919586,
+   "perturbed_err": 0.28191736340522766
+  },
+  "state_random": {
+   "n": 16272,
+   "win_rate": 0.829031465093412,
+   "ci": [
+    0.812918159728266,
+    0.8444638107411367
+   ],
+   "clean_err": 0.28118565678596497,
+   "perturbed_err": 0.30599215626716614
+  },
+  "action_shift": {
+   "n": 16272,
+   "win_rate": 0.9339355948869223,
+   "ci": [
+    0.911248452345807,
+    0.9523165574001535
+   ],
+   "clean_err": 0.28118565678596497,
+   "perturbed_err": 0.2993201017379761
+  },
+  "action_random": {
+   "n": 16272,
+   "win_rate": 0.9405727630285152,
+   "ci": [
+    0.9324572272621839,
+    0.9481567137239333
+   ],
+   "clean_err": 0.28118565678596497,
+   "perturbed_err": 0.3025458753108978
+  },
+  "kit_swap": {
+   "n": 16272,
+   "win_rate": 0.8386184857423795,
+   "ci": [
+    0.8195435560395451,
+    0.8558026657334104
+   ],
+   "clean_err": 0.28118565678596497,
+   "perturbed_err": 0.30676671862602234
+  }
+ },
+ "skipped": {
+  "state_shift": 432,
+  "state_random": 0,
+  "action_shift": 0,
+  "action_random": 0,
+  "kit_swap": 0
+ },
+ "kit_swap_by_kit": {
+  "Acoustic Kit": {
+   "n": 2034,
+   "win_rate": 0.8225172074729596
+  },
+  "Unplugged": {
+   "n": 2034,
+   "win_rate": 0.9390363815142576
+  },
+  "Bigga Bop (Jazz)": {
+   "n": 2034,
+   "win_rate": 0.8294001966568338
+  },
+  "Heavy Metal": {
+   "n": 2034,
+   "win_rate": 0.855457227138643
+  },
+  "Pop-Rock (Studio)": {
+   "n": 2034,
+   "win_rate": 0.7787610619469026
+  },
+  "Raw Dnb (Layered Hybrid)": {
+   "n": 2034,
+   "win_rate": 0.7743362831858407
+  },
+  "909 Simple": {
+   "n": 2034,
+   "win_rate": 0.8805309734513275
+  },
+  "Deep Daft": {
+   "n": 2034,
+   "win_rate": 0.8289085545722714
+  }
+ }
+}

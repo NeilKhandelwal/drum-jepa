@@ -101,7 +101,7 @@ configs/        kit split (kits_v1.yaml) and run configs (drumjepa_v1*.yaml)
 drumjepa/       package: drum_map, features, dataset, model (Es/Ea/f/g), inverse
 scripts/        download, inventory, extraction, build_cache, train, eval_e1..e5
 tests/          synthetic-batch tests for the model and each eval
-docs/           inventory, experiment plan and verdicts, per-block results
+docs/           inventory, experiment plan and verdicts, per-block results, followups
 notes/          decisions on unspecified details, MPS workarounds
 runs/           run directories (ignored by git)
 data/           downloads and caches (ignored by git)
