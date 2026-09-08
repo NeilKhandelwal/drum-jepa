@@ -332,10 +332,14 @@ against 0.89), but E1 kit-swap sensitivity on unseen kits is identical for both
 weights. A fixed-readout eval shows that under the training mask the predicted
 grid scores at its ceiling for every model, so the scale-free prediction number
 is the full-mask readout ratio: 0.92-1.00 for aux_rec 0.1 against 0.80-0.88 for
-aux_rec 0. A mel-reconstruction control halves the normalized error but does not
-move that ratio, and both regularized models enter a regime where error / teacher
-variance rewards spread rather than prediction. Consequences: error / teacher
-variance is retired for cross-model claims; the content gain is action-specific
-on unseen kits only; the prediction gain is specific to the action target on the
-readout ratio, pending mel-control seeds.
+aux_rec 0. A mel-reconstruction control, three seeds, halves the normalized error, and both
+regularized models enter a regime where error / teacher variance rewards spread
+rather than prediction. On the readout ratio the groups order baseline (0.80-0.88)
+< mel control (0.87-0.91) < action target (0.92-1.00), the action target separated
+from both. Consequences: error / teacher variance is retired for cross-model
+claims; a weak reconstruction term of either kind restores content and improves
+the scale-free prediction measure; the action target does both more strongly,
+seed-robustly on train-kit content and on the prediction ratio, suggestively on
+held-out content. "Restores action content" becomes "asks the state to keep more
+of its input, with the action as the best target tested."
 

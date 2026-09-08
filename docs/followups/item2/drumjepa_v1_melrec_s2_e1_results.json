@@ -1,0 +1,106 @@
+{
+ "run_dir": "runs/drumjepa_v1_melrec_s2",
+ "split": "validation",
+ "epoch": 19,
+ "step": 12400,
+ "kits": "train",
+ "kit_names": [
+  "Jazz",
+  "60s Rock",
+  "Studio (Live Room)",
+  "Cassette (Lo-Fi Compress)",
+  "Ele-Drum",
+  "808 Simple"
+ ],
+ "n_transitions": 12204,
+ "K": 4,
+ "full_mask": false,
+ "seed": 0,
+ "n_bootstrap": 1000,
+ "git_commit": "baa45e0c2cced673f0ef1bbcbc581d601aaf7617",
+ "perturbations": {
+  "state_shift": {
+   "n": 11880,
+   "win_rate": 0.5763468013468014,
+   "ci": [
+    0.5323196924384628,
+    0.6227363511567198
+   ],
+   "clean_err": 0.027360890060663223,
+   "perturbed_err": 0.030662178993225098
+  },
+  "state_random": {
+   "n": 12204,
+   "win_rate": 0.9868895444116683,
+   "ci": [
+    0.9827633699745237,
+    0.9904189151606231
+   ],
+   "clean_err": 0.029312504455447197,
+   "perturbed_err": 1.7122650146484375
+  },
+  "action_shift": {
+   "n": 12204,
+   "win_rate": 0.9316617502458211,
+   "ci": [
+    0.8969148223264658,
+    0.9624457445648896
+   ],
+   "clean_err": 0.029312504455447197,
+   "perturbed_err": 0.036694176495075226
+  },
+  "action_random": {
+   "n": 12204,
+   "win_rate": 0.957391019337922,
+   "ci": [
+    0.9340364746506116,
+    0.9745161795443772
+   ],
+   "clean_err": 0.029312504455447197,
+   "perturbed_err": 0.06936867535114288
+  },
+  "kit_swap": {
+   "n": 12204,
+   "win_rate": 0.9979514913143231,
+   "ci": [
+    0.995763555937754,
+    0.9995319233898459
+   ],
+   "clean_err": 0.029312504455447197,
+   "perturbed_err": 2.0571906566619873
+  }
+ },
+ "skipped": {
+  "state_shift": 324,
+  "state_random": 0,
+  "action_shift": 0,
+  "action_random": 0,
+  "kit_swap": 0
+ },
+ "kit_swap_by_kit": {
+  "Jazz": {
+   "n": 2034,
+   "win_rate": 0.9985250737463127
+  },
+  "60s Rock": {
+   "n": 2034,
+   "win_rate": 0.9970501474926253
+  },
+  "Studio (Live Room)": {
+   "n": 2034,
+   "win_rate": 0.9975417895771878
+  },
+  "Cassette (Lo-Fi Compress)": {
+   "n": 2034,
+   "win_rate": 0.9980334316617503
+  },
+  "Ele-Drum": {
+   "n": 2034,
+   "win_rate": 0.9980334316617503
+  },
+  "808 Simple": {
+   "n": 2034,
+   "win_rate": 0.9985250737463127
+  }
+ }
+}

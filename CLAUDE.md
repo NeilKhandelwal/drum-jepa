@@ -169,8 +169,11 @@ Follow-ups done 2026-09-07 (docs/followups.md): E4 on 0.1 passes all seeds; 40-e
 baseline does not close the gap and sheds more content; held-out swap improves across
 seeds but held-out E1 kit swap is identical; fixed-readout eval saturates under the
 training mask, use the full-mask ratio (0.92-1.00 vs 0.80-0.88); mel-reconstruction
-control halves normalized error but not the ratio. Error / teacher variance is retired
-for cross-model claims. Mel-control seeds 1 and 2 pending (chain2). Next: email Ziyu.
+control (3 seeds) halves normalized error and improves the ratio modestly (0.87-0.91),
+action target more (0.92-1.00, separated). Error / teacher variance retired for
+cross-model claims. Headline now: "a weak reconstruction term keeps input content in
+the state and helps prediction; the action target is the best target tested." Next:
+email Ziyu.
 Next:
 1. (done) Fill configs/kits_v1.yaml, commit, push.
 2. Warm-up: warmup/lejepa_inet10.py (LeJEPA minimal, ViT-S/8, Imagenette,

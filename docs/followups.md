@@ -60,14 +60,13 @@ Pass: held-out swap win rate at or above drumjepa_v1's 0.889.
 
 ## Results 2026-09-07
 Full write-ups, tables, and artifacts: docs/followups/item1.md through item5.md.
-Every eval and both training runs finished; mel-control seeds 1 and 2 are
-running (scripts/run_followups_chain2.sh) and item 2 is provisional until they
-land.
+Every eval and all training runs finished, including mel-control seeds 1 and 2
+(scripts/run_followups_chain2.sh, 2026-09-08).
 
 | item | result | one line |
 |---|---|---|
 | 1, fixed readout | passed, narrower than planned | Under the 75% mask every model's predicted grid scores at its ceiling, so that condition measures encoder content, not prediction. Under full mask the ratio does separate: 0.92-1.00 for aux_rec 0.1 against 0.80-0.88 for aux_rec 0, three seeds, no overlap. |
-| 2, control target | neither pass nor fail | The mel-target control halves the normalized error (0.021 vs 0.082), so the plan's criterion fails literally. But both regularized models entered a regime where kit-swapped error is 26x and 78x the clean error and the target is nearly a function of s_t, so MSE there means "easier to predict." On the readout ratio the control (0.865) sits inside the baseline range and the action target above it. Content: matched on train kits, action-specific on held-out kits (0.25 vs 0.40). One seed. |
+| 2, control target | fails the literal criterion, changes the reading | The mel-target control halves the normalized error (0.021-0.035 vs 0.079-0.108), but both regularized models enter a regime where kit-swapped error is 26-77x the clean error, so that metric means "easier to predict." On the readout ratio the groups order baseline (0.80-0.88) < mel (0.87-0.91) < action (0.92-1.00), with the action target separated from both. Content on train kits orders the same way, all separated; on held-out kits mel (0.25-0.26) beats baseline (0.19-0.21) and the action target (0.25-0.40) overlaps mel at one seed. Three seeds each. |
 | 3, longer baseline | passed | 40 epochs: normalized error 0.066, readout ratio 0.867, E2 win 0.776, none near the action target. The normalized-error dip is entirely spread (raw error 0.097 vs 0.095). Action content keeps falling with training (E5 0.223 to 0.197), so shedding is progressive. |
 | 4, E4 on 0.1 | passed | Inverse-model onset F1 0.388-0.440 on train kits, 0.270-0.354 held-out, every seed above both controls (0.25). Velocity MAE 14.8-17.0 is the best of any representation. |
 | 5, unseen kits | passed on the criterion, narrowly | Held-out predictor swap 0.917-0.955 against 0.886-0.893, three seeds each, no overlap but adjacent CIs touch. E1 on held-out kits: kit swap 0.839 for both weights, identical; only action-side perturbations improve. Kit-vector transfer between train kits reverses sign across seeds. |
@@ -76,8 +75,13 @@ What the follow-ups changed in the reading of the headline:
 - The prediction half no longer rests on error / teacher variance. That metric
   rewards spread (items 2 and 3) and is retired for cross-model claims. The
   prediction claim now rests on the full-mask readout ratio and the E2 win rate.
-- The content half is action-specific only on unseen kits. Any input
-  reconstruction restores onset content on training kits.
+- The content half is not action-specific in kind. Any input reconstruction
+  restores onset content; the action target restores more of it on training
+  kits (seed-robust) and suggestively more on unseen kits (two of three seeds).
+- The prediction gain is also shared in kind: the mel control improves the
+  readout ratio modestly, the action target more, with no overlap between them.
+  The headline phrase "restores action content" should read "asks the state to
+  keep more of its input, with the action as the best target tested."
 - The shedding mechanism is progressive with training (item 3) and the fix
   survives a decoder that is not the aux head (item 4).
 - "Generalizes to unseen kits" is too strong; "improves the held-out swap" is
