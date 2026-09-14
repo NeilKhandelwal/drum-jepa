@@ -25,7 +25,9 @@ DEFAULTS = dict(
     use_state=True,  # False = E2 action-only baseline: f gets no s_t tokens
     use_action=True,  # False = E5 AO-JEPA baseline: no action encoder, no cross-attn, no g loss
     aux_rec=0.0,      # >0 = option A regularizer: reconstruct a_t from s_t, weight of the aux term
-    aux_target="action",  # "action" = drumroll onsets, BCE; "mel" = the window's log-mel, MSE (control)
+    # "action" = drumroll onsets, BCE; "mel" = the window's log-mel, MSE (control);
+    # "vc" = VICReg variance+covariance on the pooled s_t steps, no head, no target (control)
+    aux_target="action",
     aux_pos_weight=50.0,
     mask_ratio=0.75, mask_blocks=4, mask_aspect=(0.75, 1.5), mask_scale=(0.15, 0.2),
     tau=0.95, lambda_a=0.5, dropout=0.0,
@@ -221,12 +223,14 @@ class DrumJEPA(nn.Module):
         # same window's drumroll keeps action content in the state. Off unless aux_rec > 0.
         # aux_target "mel" swaps the drumroll for the window's own log-mel: same head shape
         # family, no action content, the control for "any weak regularizer helps".
+        # aux_target "vc" reconstructs nothing at all: it spreads the same pooled vectors
+        # (VICReg variance + covariance), the control for "any regularizer helps".
         self.aux_rec = cfg["aux_rec"]
         self.aux_target = cfg["aux_target"]
-        assert self.aux_target in ("action", "mel"), f"aux_target: {self.aux_target!r}"
+        assert self.aux_target in ("action", "mel", "vc"), f"aux_target: {self.aux_target!r}"
         pt = cfg["state_patch"][0]
-        n_rec = pt * K_V1 if self.aux_target == "action" else N_MELS
-        self.rec_head = nn.Linear(d, n_rec) if self.aux_rec > 0 else None
+        n_rec = {"action": pt * K_V1, "mel": N_MELS}.get(self.aux_target)  # None for "vc"
+        self.rec_head = nn.Linear(d, n_rec) if self.aux_rec > 0 and n_rec else None
         self.register_buffer("aux_pos_weight", torch.tensor(float(cfg["aux_pos_weight"])), persistent=False)
         self._last_masks = None
 
@@ -333,7 +337,7 @@ class DrumJEPA(nn.Module):
         pred_s, s_tgt, s_t = self._state_branch(
             x_t, batch["a_t1"], batch["cc_t1"], x_t1, mask_s)
         loss_s = self._masked_mse(pred_s, s_tgt, mask_s)
-        if self.rec_head is not None:
+        if self.aux_rec > 0:  # not `rec_head is not None`: aux_target "vc" has no head
             loss_rec = self.reconstruction_loss(s_t, batch)
             loss_s_total = loss_s + self.aux_rec * loss_rec
         else:
@@ -365,9 +369,14 @@ class DrumJEPA(nn.Module):
         (B, 200, 14) drumroll, scored by BCE against a_t > 0. With "mel" it emits the
         229 un-padded normalized log-mel bins of the step, averaged over its 25 frames,
         scored by MSE: the same head shape family with no action content in the target.
+        With "vc" there is no head and no target: the (B*8, d) pooled step vectors are
+        scored by VICReg's variance and covariance terms, which spread the same vectors
+        the other two heads read without asking them to reconstruct anything.
         """
         B, d = s_t.size(0), s_t.size(-1)
         steps = s_t.view(B, self.grid[0], self.grid[1], d).mean(2)
+        if self.aux_target == "vc":
+            return self._vc_loss(steps.reshape(-1, d).float())
         out = self.rec_head(steps).float()
         if self.aux_target == "mel":
             target = batch["x_t"].view(B, self.grid[0], -1, N_MELS).mean(2).float()
@@ -375,6 +384,22 @@ class DrumJEPA(nn.Module):
         target = (batch["a_t"] > 0).float()
         return F.binary_cross_entropy_with_logits(out.view(B, -1, K_V1), target,
                                                   pos_weight=self.aux_pos_weight)
+
+    @staticmethod
+    def _vc_loss(z, eps=1e-4):
+        """VICReg variance + covariance on z (n, d); no invariance term, no target.
+
+        Variance: mean over dims of relu(1 - std_dim), std across the n rows, eps
+        inside the sqrt as in VICReg (Bardes et al. 2022). Covariance: sum of the
+        squared off-diagonal entries of the d x d covariance, divided by d. Combined
+        with equal weights rather than VICReg's 25:1, because the pair is being matched
+        to one recorded aux magnitude and a second free ratio would not be identified.
+        """
+        z = z - z.mean(0)
+        var = F.relu(1.0 - torch.sqrt(z.var(0) + eps)).mean()
+        cov = (z.T @ z) / max(z.size(0) - 1, 1)
+        cov = (cov.pow(2).sum() - cov.diagonal().pow(2).sum()) / z.size(1)
+        return var + cov
 
     # ---- EMA ------------------------------------------------------------
     @torch.no_grad()
