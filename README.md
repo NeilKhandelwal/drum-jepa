@@ -86,22 +86,55 @@ python scripts/eval_e2.py --full runs/drumjepa_v1 --action-only runs/drumjepa_v1
 python scripts/eval_e3.py --run-dir runs/drumjepa_v1                  # kit-latent probes and geometry
 python scripts/eval_e4.py                                             # inverse model (trains a small decoder)
 python scripts/eval_e5.py                                             # content probes vs AO-JEPA
+python scripts/eval_readout.py --run-dir runs/drumjepa_v1 --split test  # fixed-readout prediction ratio
+python scripts/eval_e5_per_kit.py drumjepa_v1                         # E5 onset F1 per kit
 python -m pytest tests -q
 ```
+
+The option A regularizer (`aux_rec`, reconstruct the action from the state) and
+its controls are run configs: `configs/drumjepa_v1_auxrec01.yaml` (action
+target), `_melrec` (mel target), `_vcrec` (VICReg variance-covariance, no
+target), each with `_s1`/`_s2` seed variants. `scripts/run_*_chain.sh` train and
+evaluate a set of runs in sequence under `caffeinate`. The 12-training-kit
+split is `configs/kits_v2.yaml` with cache `data/cache/v2` and
+`scripts/cache_stats.py` for its normalization stats.
 
 Every probe number is reported next to two controls, a random-init encoder and
 the raw log-mel, and only counts if the trained encoder beats both. Decisions
 the paper leaves open, and the caveat attached to each, are in
 `notes/decisions.md`.
 
+## Results so far
+
+Six training kits, eight held out, one seed unless stated. Verdicts and the
+per-block write-ups are in `docs/experiments.md`; the numbers below are the
+scale-free ones (win rates, probe F1, readout ratios).
+
+- **The state keeps what the action does not determine and sheds what it
+  does.** The full model beats an action-only predictor on clean inputs
+  (E2), and kit identity gets counterfactual structure only through training
+  (E3). But the drum hits become less linearly recoverable from the state than
+  from an untrained encoder (E4/E5), and more so with longer training.
+- **A weak action-reconstruction term fixes it** (`aux_rec` 0.1): hit content
+  returns to raw-mel level on training kits and the fixed-readout prediction
+  ratio rises from 0.80-0.88 to 0.92-1.00, three seeds each
+  (`docs/optionA`, `docs/followups`).
+- **The gain comes from the target.** A mel-reconstruction control helps
+  less; a VICReg variance-covariance term with no target is worse than the
+  baseline on every measure (`docs/followups/item2.md`, `item6.md`).
+- **It does not generalize to unseen kits.** Held-out content is about half
+  the train-kit number, and doubling the training kits to 12 leaves it
+  unchanged (`docs/k12.md`).
+
 ## Layout
 
 ```
-configs/        kit split (kits_v1.yaml) and run configs (drumjepa_v1*.yaml)
+configs/        kit splits (kits_v1/v2.yaml) and run configs (drumjepa_v1*/v2*.yaml)
 drumjepa/       package: drum_map, features, dataset, model (Es/Ea/f/g), inverse
 scripts/        download, inventory, extraction, build_cache, train, eval_e1..e5
 tests/          synthetic-batch tests for the model and each eval
-docs/           inventory, experiment plan and verdicts, per-block results, followups
+docs/           inventory, experiment plan and verdicts (experiments.md), per-block
+                results (e1..e5, optionA, followups, k12)
 notes/          decisions on unspecified details, MPS workarounds
 runs/           run directories (ignored by git)
 data/           downloads and caches (ignored by git)
