@@ -343,3 +343,21 @@ seed-robustly on train-kit content and on the prediction ratio, suggestively on
 held-out content. "Restores action content" becomes "asks the state to keep more
 of its input, with the action as the best target tested."
 
+### Item 6 — variance-covariance control (2026-09-14, docs/followups/item6.md)
+The control the follow-ups left open: VICReg variance + covariance on the same
+frequency-pooled s_t steps the action and mel heads read, weight 0.1, no head, no
+target, three seeds (runs/drumjepa_v1_vcrec{,_s1,_s2}). It is worse than the
+unregularized baseline on every measure. Readout ratio 0.75-0.89 (baseline
+0.80-0.88, mel control 0.87-0.91, action target 0.92-1.00); E5 train-kit onset F1
+0.13-0.17 against the baseline's 0.22-0.27; own clean error above the action-only
+predictor's, so E2 win 0.12-0.28; E1 kit swap 0.85-0.95; kit accuracy of the
+predicted state under a full mask 0.22-0.27 against 0.85-0.93 for the baseline and
+0.99+ for both reconstruction targets. The term never collapses (0.27 from epoch 2
+to 19, covariance half), so it is the control whose effective weight stays closest
+to the action target's, and it moves every axis the other way. Consequence: the
+option A gain is specific to reconstruction targets. The headline gains its
+missing clause: a weak reconstruction term keeps input content in the state and
+helps the scale-free prediction measure, the action target is the best target
+tested, and a target-free spreading term of matched magnitude hurts both. One
+weight only; equal var/cov weighting; applied to the pooled steps, not the token
+grid.

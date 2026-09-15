@@ -59,9 +59,10 @@ Pass: held-out swap win rate at or above drumjepa_v1's 0.889.
 - Cost: 1, 4, 5 need no training. 2 and 3 are one ~75 min run each plus evals.
 
 ## Results 2026-09-07
-Full write-ups, tables, and artifacts: docs/followups/item1.md through item5.md.
+Full write-ups, tables, and artifacts: docs/followups/item1.md through item6.md.
 Every eval and all training runs finished, including mel-control seeds 1 and 2
-(scripts/run_followups_chain2.sh, 2026-09-08).
+(scripts/run_followups_chain2.sh, 2026-09-08) and the variance-covariance control,
+three seeds (item 6, scripts/run_vc_chain.sh, 2026-09-14).
 
 | item | result | one line |
 |---|---|---|
@@ -70,6 +71,7 @@ Every eval and all training runs finished, including mel-control seeds 1 and 2
 | 3, longer baseline | passed | 40 epochs: normalized error 0.066, readout ratio 0.867, E2 win 0.776, none near the action target. The normalized-error dip is entirely spread (raw error 0.097 vs 0.095). Action content keeps falling with training (E5 0.223 to 0.197), so shedding is progressive. |
 | 4, E4 on 0.1 | passed | Inverse-model onset F1 0.388-0.440 on train kits, 0.270-0.354 held-out, every seed above both controls (0.25). Velocity MAE 14.8-17.0 is the best of any representation. |
 | 5, unseen kits | passed on the criterion, narrowly | Held-out predictor swap 0.917-0.955 against 0.886-0.893, three seeds each, no overlap but adjacent CIs touch. E1 on held-out kits: kit swap 0.839 for both weights, identical; only action-side perturbations improve. Kit-vector transfer between train kits reverses sign across seeds. |
+| 6, variance-covariance control (added 2026-09-14) | passed; closes the open question | VICReg variance+covariance on the same pooled steps, weight 0.1, no head, no target, three seeds. Worse than the baseline on everything: readout ratio 0.75-0.89 (baseline 0.80-0.88, mel 0.87-0.91, action 0.92-1.00), E5 train-kit onset 0.13-0.17 against 0.22-0.27, E2 win 0.12-0.28, E1 kit swap 0.85-0.95, full-mask kit accuracy 0.22-0.27 against 0.85+. The term never collapses (0.27 all run), so it is the control whose effective weight stays closest to the action target's. Spreading without a target removes content and hurts prediction. |
 
 What the follow-ups changed in the reading of the headline:
 - The prediction half no longer rests on error / teacher variance. That metric
@@ -87,5 +89,11 @@ What the follow-ups changed in the reading of the headline:
 - "Generalizes to unseen kits" is too strong; "improves the held-out swap" is
   what the data supports (item 5).
 
-Open: a control that cannot collapse, such as a variance-covariance regularizer,
-to separate "any reconstruction target" from "any regularizer." Not in this plan.
+- The gain is specific to reconstruction targets, not to regularization as such
+  (item 6): a variance-covariance term of matched magnitude that cannot collapse
+  removes content and hurts prediction. "Any regularizer helps" is ruled out; the
+  headline gains the clause "a target-free spreading term of matched magnitude
+  hurts both."
+
+Closed 2026-09-14: the variance-covariance control that the 2026-09-08 revision left
+open is item 6. Nothing from this plan is open.

@@ -129,3 +129,25 @@ the action term reaches 0.5 is a stronger pull late in training, not an equal on
 Compare the two runs' loss_rec curves before reading the result; if they diverge by
 more than a factor of two, the control is at a different effective weight and a
 rerun at a rescaled weight decides it.
+
+## Variance-covariance control (2026-09-14)
+`aux_target: vc` (configs/drumjepa_v1_vcrec.yaml) keeps option A's weight and the
+pooled s_t step vectors its head reads, and replaces the head and target with VICReg's
+variance and covariance terms on those vectors (drumjepa/model.py, `_vc_loss`). No
+invariance term: there is no second view. Equal weights on variance and covariance
+rather than VICReg's 25:1, because the pair is matched to one recorded aux magnitude
+and a second free ratio would not be identified. This is docs/followups.md item 6,
+the control that cannot collapse, separating "any reconstruction target" from "any
+regularizer."
+
+Weight: measured at step 5 of a 64-pair overfit smoke run with the seed-0 init, the
+vc term is 0.886 against the action BCE's 0.967 recorded above for the mel control,
+within 10%, so the weight stays 0.1. In the real run it is 1.28 at step 50 (action
+0.92), 0.69 over epoch 0 (action 0.57), then 0.27 from epoch 2 to 19 (action ~0.3):
+the two curves are within a factor of two throughout, which the mel control's were
+not, so no rescaled rerun was needed.
+
+Watch for: the variance half is satisfied by epoch 2 (teacher std crosses 1.0), so
+for most of training this is a covariance-only penalty on 256-d pooled steps. A term
+on the un-pooled token grid, or VICReg's own 25:1 weighting, is a different
+intervention.
