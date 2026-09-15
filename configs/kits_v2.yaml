@@ -1,0 +1,93 @@
+# Kit split v2 for drum-JEPA. Names match `kit_name` in e-gmd-v1.0.0.csv exactly.
+#
+# What v2 is for:
+#   v1 trains on 6 kits and holds out 8. E4/E5 found that drum-JEPA's state
+#   carries less action content than an untrained encoder, and the follow-ups
+#   measure a held-out content margin (readout on the 8 held-out kits) that is
+#   consistently worse than the train-kit number. One candidate explanation is
+#   simply that 6 kits are too few for the encoder to learn a kit-general
+#   representation. v2 doubles the training kits to 12 and keeps the SAME 8
+#   held-out kits, so held-out numbers are measured on identical audio and the
+#   only thing that moves is training-kit diversity.
+#
+# Rules (unchanged from v1):
+#   - train kits: 12, spread from acoustic to electronic
+#   - heldout kits: 8, never seen in training, identical to v1
+#   - All unique sequences are used on every listed kit. Never split by
+#     (sequence, kit): the same performance exists on all 43 kits, so a split
+#     by pair leaks the action. Sequence-level train/val/test comes from the
+#     E-GMD `split` column and is applied on top of this kit split.
+#
+# The action (drumroll + CC4) is built from the CANONICAL MIDI of each
+# sequence, not from the kit's own MIDI file: 18/43 kits remap pads in the
+# shipped MIDI (see docs/inventory.md, "Per-kit MIDI deviation"). Kits below
+# are annotated with their remap so the counterfactual analysis knows where
+# the kit's pad->sound map is degenerate. Remapping kits are legitimate
+# training kits precisely because the action is canonical; the remap makes the
+# kit's pad->sound map many-to-one, which is a kit property the state must
+# carry, not an action difference.
+#
+# How the six new train kits were chosen:
+#   - not in v1's train or held-out lists;
+#   - canonical MIDI preferred: 4 of 6 are 100% canonical, and the two that are
+#     not sit at the electronic end, which is where every remapping kit lives.
+#     Same 4-canonical / 2-remapping ratio as v1's six;
+#   - spread acoustic -> electronic, filling production styles v1's train set
+#     has no example of (funk, big ambient room, gated 80s, tight/close prog,
+#     layered hybrid, programmed R&B);
+#   - the two kits whose entire hi-hat collapses to pitch 54 are excluded, as
+#     in v1: "Compact Lite (w/ Tambourine HH)", "Dark Hybrid";
+#   - metal and plain-acoustic kits were passed over on purpose. "Heavy Metal"
+#     and "Acoustic Kit" are held out, and adding a near neighbour of a
+#     held-out kit would improve that kit's held-out number for a reason other
+#     than diversity. The one unavoidable exception is noted inline: the
+#     electronic end of E-GMD is small, so "Super Boom (Layered)" is a
+#     near neighbour of held-out "Raw Dnb (Layered Hybrid)". Read the
+#     per-kit held-out breakdown, not just the mean, when v2 lands.
+split_version: v2
+canonical_kit: Acoustic Kit   # any of the 25 canonical kits gives identical MIDI
+
+train_kits:                   # 12, acoustic -> electronic; first 6 are v1's, verbatim
+  # --- v1's six, unchanged ---
+  - Jazz                      # canonical
+  - 60s Rock                  # canonical
+  - Studio (Live Room)        # canonical. CLAUDE.md said "Studio"; the other
+                              # candidate, "Pop-Rock (Studio)", is held out.
+  - Cassette (Lo-Fi Compress) # canonical
+  - Ele-Drum                  # remaps tom rims -> 39 (clap), x-stick -> 40 (rim)
+  - 808 Simple                # remaps x-stick -> 40 (rim)
+  # --- new in v2 ---
+  - Modern Funk               # canonical; tight dry funk, an idiom v1 train lacks
+  - Arena Stage               # canonical; large ambient room, extends the
+                              # reverberant end past Studio (Live Room)
+  - Tight Prog                # canonical; close-miked, high-tuned, very dry
+  - Rockin Gate (80s)         # canonical; gated-reverb 80s production, a
+                              # processing style absent from v1 train AND from
+                              # the held-out set
+  - Super Boom (Layered)      # remaps tom-2 rim -> 39 (1,222 notes; 99.6% kept).
+                              # Layered hybrid, the acoustic/electronic hinge.
+                              # Near neighbour of held-out Raw Dnb (Layered
+                              # Hybrid) — the only such pair added in v2.
+  - Nu RNB                    # remaps x-stick -> 40 (rim) and tom rims -> 39/37
+                              # (96.5% kept), the same remap family as v1's
+                              # Ele-Drum. Programmed R&B, near the machine end.
+
+heldout_kits:                 # 8, identical to v1 — this is what makes v1 and v2
+                              # held-out numbers comparable at all
+  - Acoustic Kit              # canonical; plain acoustic reference
+  - Unplugged                 # canonical; sparse acoustic
+  - Bigga Bop (Jazz)          # canonical; near-neighbor of train kit Jazz
+  - Heavy Metal               # canonical; far acoustic
+  - Pop-Rock (Studio)         # canonical; near-neighbor of Studio (Live Room)
+  - Raw Dnb (Layered Hybrid)  # canonical; hybrid
+  - 909 Simple                # near-neighbor of 808 Simple; same x-stick -> rim remap
+  - Deep Daft                 # electronic; open hat -> 54, tom-2 rim -> 39
+
+# Caveat carried over from v1: the two kits whose entire hi-hat (incl. pedal)
+# collapses to one sound (pitch 54) are still not extracted:
+# "Compact Lite (w/ Tambourine HH)", "Dark Hybrid".
+#
+# Caveat specific to v2: the cache built from this split has its own
+# `stats.json` (mel mean/std over the v2 train split), so v2 runs are
+# normalized differently from v1 runs. Losses and prediction errors compare
+# WITHIN a cache version only (notes/decisions.md, "Mel normalization").

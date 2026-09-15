@@ -1,0 +1,136 @@
+{
+ "run_dir": "runs/drumjepa_v2_12k",
+ "split": "validation",
+ "epoch": 19,
+ "step": 24800,
+ "kits": "train",
+ "kit_names": [
+  "Jazz",
+  "60s Rock",
+  "Studio (Live Room)",
+  "Cassette (Lo-Fi Compress)",
+  "Ele-Drum",
+  "808 Simple",
+  "Modern Funk",
+  "Arena Stage",
+  "Tight Prog",
+  "Rockin Gate (80s)",
+  "Super Boom (Layered)",
+  "Nu RNB"
+ ],
+ "n_transitions": 24408,
+ "K": 4,
+ "full_mask": false,
+ "seed": 0,
+ "n_bootstrap": 1000,
+ "git_commit": "d9e27fb9fc3d0863e4b55adf0ff7367d2a9fabad",
+ "perturbations": {
+  "state_shift": {
+   "n": 23760,
+   "win_rate": 0.5467171717171717,
+   "ci": [
+    0.48730674948532304,
+    0.6013800827785887
+   ],
+   "clean_err": 0.01631793938577175,
+   "perturbed_err": 0.018131304532289505
+  },
+  "state_random": {
+   "n": 24408,
+   "win_rate": 0.9905768600458866,
+   "ci": [
+    0.9874705386755347,
+    0.9932197309177816
+   ],
+   "clean_err": 0.01894599199295044,
+   "perturbed_err": 2.6977951526641846
+  },
+  "action_shift": {
+   "n": 24408,
+   "win_rate": 0.9509177318911832,
+   "ci": [
+    0.9247106721762037,
+    0.9708653452330206
+   ],
+   "clean_err": 0.01894599199295044,
+   "perturbed_err": 0.021897362545132637
+  },
+  "action_random": {
+   "n": 24408,
+   "win_rate": 0.9508357915437562,
+   "ci": [
+    0.9267614561061654,
+    0.9672564695705343
+   ],
+   "clean_err": 0.01894599199295044,
+   "perturbed_err": 0.022504078224301338
+  },
+  "kit_swap": {
+   "n": 24408,
+   "win_rate": 0.9964765650606359,
+   "ci": [
+    0.9937228352126684,
+    0.9984978490030523
+   ],
+   "clean_err": 0.01894599199295044,
+   "perturbed_err": 2.96236515045166
+  }
+ },
+ "skipped": {
+  "state_shift": 648,
+  "state_random": 0,
+  "action_shift": 0,
+  "action_random": 0,
+  "kit_swap": 0
+ },
+ "kit_swap_by_kit": {
+  "Jazz": {
+   "n": 2034,
+   "win_rate": 0.9985250737463127
+  },
+  "60s Rock": {
+   "n": 2034,
+   "win_rate": 0.9960668633235005
+  },
+  "Studio (Live Room)": {
+   "n": 2034,
+   "win_rate": 0.9980334316617503
+  },
+  "Cassette (Lo-Fi Compress)": {
+   "n": 2034,
+   "win_rate": 0.9950835791543756
+  },
+  "Ele-Drum": {
+   "n": 2034,
+   "win_rate": 0.9945919370698132
+  },
+  "808 Simple": {
+   "n": 2034,
+   "win_rate": 0.9970501474926253
+  },
+  "Modern Funk": {
+   "n": 2034,
+   "win_rate": 0.995575221238938
+  },
+  "Arena Stage": {
+   "n": 2034,
+   "win_rate": 0.9965585054080629
+  },
+  "Tight Prog": {
+   "n": 2034,
+   "win_rate": 0.9941002949852508
+  },
+  "Rockin Gate (80s)": {
+   "n": 2034,
+   "win_rate": 0.9975417895771878
+  },
+  "Super Boom (Layered)": {
+   "n": 2034,
+   "win_rate": 0.9980334316617503
+  },
+  "Nu RNB": {
+   "n": 2034,
+   "win_rate": 0.9965585054080629
+  }
+ }
+}

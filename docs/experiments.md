@@ -361,3 +361,19 @@ helps the scale-free prediction measure, the action target is the best target
 tested, and a target-free spreading term of matched magnitude hurts both. One
 weight only; equal var/cov weighting; applied to the pooled steps, not the token
 grid.
+
+### v2 — 12 training kits, same 8 held-out (2026-09-15, docs/k12.md, docs/k12/)
+Tests whether the held-out content margin is a data-scarcity effect: training kits
+6 -> 12 (configs/kits_v2.yaml, data/cache/v2, own stats.json), held-out kits
+unchanged, baseline and aux_rec 0.1, one seed each. Only scale-free stats compare
+across caches. The margin does not close: held-out E5 onset F1 0.195 / 0.316
+(v1: 0.19-0.21 / 0.25-0.40) while train-kit content rises to 0.295 / 0.648.
+Option A holds within the pair (readout ratio 1.006 vs 0.928, ceiling 0.665 vs
+0.393). Per kit, the action target is lower than v1 seed 0 on 7 of 8 held-out kits
+and Raw Dnb, the one held-out kit given a near neighbour in training, is the worst
+at 0.182 (was 0.327). A linear velocity probe fit on train kits fails on held-out
+kits (MAE 67 / 35 against 24.5 trivial; ~20 at v1). Reading: more kits make the
+representation more kit-specific, not more general; the held-out gap is a property
+of the objective, not the data. New tooling: scripts/cache_stats.py,
+scripts/eval_e5_per_kit.py, scripts/run_12kit_chain.sh.
+
